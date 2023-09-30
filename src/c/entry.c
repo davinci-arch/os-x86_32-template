@@ -40,7 +40,15 @@ _Noreturn void halt_loop() {
 
 void key_handler(struct keyboard_event event) {
     if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-        // process key press event
+	char *message = &event.key_character;
+        char *framebuffer = (char *) 0xb8000;
+
+        while (*message != '\0') {
+            *framebuffer = *message;
+            *(framebuffer + 1) = 0x2;
+            framebuffer += 2;
+            message++;
+        }
     }
 }
 
@@ -55,14 +63,14 @@ void kernel_entry() {
     init_kernel();
     keyboard_set_handler(key_handler);
     timer_set_handler(timer_tick_handler);
-
+    char *list_command = {"help", "clear"};
     // demo of printing hello world to screen using framebuffer
     char *message = "Hello world!";
     char *framebuffer = (char *) 0xb8000;
 
     while (*message != '\0') {
         *framebuffer = *message;
-        *(framebuffer + 1) = (0xd << 4) | 0xb;
+        *(framebuffer + 1) = 0x2;
         framebuffer += 2;
         message++;
     }
