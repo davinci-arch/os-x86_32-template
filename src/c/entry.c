@@ -57,13 +57,31 @@ void timer_tick_handler() {
 }
 
 /**
+* This is procedure which cleared a terminal
+*/
+void clear_terminal() {
+    // demo of printing hello world to screen using framebuffer
+    char *message = " ";
+    char *framebuffer = (char *) 0xb8000;
+    int amout_of_iteration = 0;
+    while (amout_of_iteration < (80*25)) {
+        *framebuffer = *message;
+        *(framebuffer + 1) = 0x2;
+        framebuffer += 2;
+	amout_of_iteration++;
+    }
+
+ 
+}
+
+/**
  * This is where the bootloader transfers control to.
  */
 void kernel_entry() {
     init_kernel();
     keyboard_set_handler(key_handler);
     timer_set_handler(timer_tick_handler);
-    char *list_command = {"help", "clear"};
+    /*char *list_command = {"help", "clear"};
     // demo of printing hello world to screen using framebuffer
     char *message = "Hello world!";
     char *framebuffer = (char *) 0xb8000;
@@ -73,9 +91,9 @@ void kernel_entry() {
         *(framebuffer + 1) = 0x2;
         framebuffer += 2;
         message++;
-    }
-
-    put_cursor(12);
+    } */
+    clear_terminal(); 
+    put_cursor(0);
 
     halt_loop();
 }
