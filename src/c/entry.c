@@ -19,6 +19,7 @@ void init_kernel() {
     enable_interrupts();
 }
 
+
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
  * the first line 20th column, position = 80 will place in the first column of the second line.
@@ -39,7 +40,7 @@ _Noreturn void halt_loop() {
 }
 
 void key_handler(struct keyboard_event event) {
-    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
+    /*if (event.key_character && event.type == EVENT_KEY_PRESSED) {
 	char *message = &event.key_character;
         char *framebuffer = (char *) 0xb8000;
 
@@ -49,7 +50,65 @@ void key_handler(struct keyboard_event event) {
             framebuffer += 2;
             message++;
         }
+    } */
+}
+
+char *lastPosition = (char *) 0xb8000;
+int cursor_position = 0;
+
+void write_letter(struct keyboard_event event) {
+
+   if (event.key_character && event.type == EVENT_KEY_PRESSED) { 
+	char *message = &event.key_character;
+
+	if (*message == '\b') {
+	    removeSymbol();
+	} else {
+	    writeSymbol(message);
+	}
+	
+	
+   }
+}
+
+void removeSymbol() {
+
+    char *message = " ";
+
+    if (lastPosition > 0xb8000) {
+
+	lastPosition -= 2;
+	
+	*lastPosition = *message;
+
+	put_cursor(--cursor_position);
+     }
+        
+     
+}
+
+
+void writeSymbol(char *character) {
+
+    
+    *lastPosition = *character;
+    *(lastPosition + 1) = 0x2;
+    lastPosition += 2;
+
+    put_cursor(++cursor_position);
+    
+
+}
+
+void clear_last_char(struct keyboard_event event) {
+   
+    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
+	char *type_key = &event.key_character;
+
+	
+
     }
+
 }
 
 void timer_tick_handler() {
@@ -57,13 +116,33 @@ void timer_tick_handler() {
 }
 
 /**
+* This is procedure which cleared a terminal
+*/
+void clear_terminal() {
+    // demo of printing hello world to screen using framebuffer
+    char *message = " ";
+    char *framebuffer = (char *) 0xb8000;
+    int amout_of_iteration = 0;
+    while (amout_of_iteration < (80*25)) {
+        *framebuffer = *message;
+        *(framebuffer + 1) = 0x2;
+        framebuffer += 2;
+	amout_of_iteration++;
+    }
+
+ 
+}
+
+/**
  * This is where the bootloader transfers control to.
  */
 void kernel_entry() {
     init_kernel();
-    keyboard_set_handler(key_handler);
+    keyboard_set_handler(write_letter);
+    //keyboard_set_handler(clear_last_char);
+
     timer_set_handler(timer_tick_handler);
-    char *list_command = {"help", "clear"};
+    /*char *list_command = {"help", "clear"};
     // demo of printing hello world to screen using framebuffer
     char *message = "Hello world!";
     char *framebuffer = (char *) 0xb8000;
@@ -73,9 +152,9 @@ void kernel_entry() {
         *(framebuffer + 1) = 0x2;
         framebuffer += 2;
         message++;
-    }
-
-    put_cursor(12);
+    } */
+    clear_terminal(); 
+    put_cursor(cursor_position);
 
     halt_loop();
 }
