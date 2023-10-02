@@ -53,8 +53,9 @@ void key_handler(struct keyboard_event event) {
     } */
 }
 
-char *lastPosition = (char *) 0xb8000;
+char *firstPosition = (char *) 0xb8000;
 int cursor_position = 0;
+int current_row = 0;
 
 void write_letter(struct keyboard_event event) {
 
@@ -66,6 +67,12 @@ void write_letter(struct keyboard_event event) {
 	} else {
 	    writeSymbol(message);
 	}
+
+	if (*message == '\n') {
+	    choseCommand();		
+		move_next_line();
+		current_row++;
+	}
 	
 	
    }
@@ -75,14 +82,14 @@ void removeSymbol() {
 
     char *message = " ";
 
-    if (lastPosition > 0xb8000) {
+    if (firstPosition > 0xb8000) {
 
-	lastPosition -= 2;
+		firstPosition -= 2;
 	
-	*lastPosition = *message;
+		*firstPosition = *message;
 
-	put_cursor(--cursor_position);
-     }
+		put_cursor(--cursor_position + (80 * current_row));
+	}
         
      
 }
@@ -90,26 +97,43 @@ void removeSymbol() {
 
 void writeSymbol(char *character) {
 
-    
-    *lastPosition = *character;
-    *(lastPosition + 1) = 0x2;
-    lastPosition += 2;
 
-    put_cursor(++cursor_position);
+    *firstPosition = *character;
+    *(firstPosition + 1) = 0x2;
+    firstPosition += 2;
+
+    put_cursor(++cursor_position + (80 * current_row));
     
 
 }
 
-void clear_last_char(struct keyboard_event event) {
-   
-    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-	char *type_key = &event.key_character;
+void choseCommand() {
 
-	
+    resetPosition();
 
+	char *position = firstPosition;
+
+    int count = 0;
+    char *array = "clear";
+
+    while (*position != '\0' && *array != '\0') {
+		
+		if (*position == *array) {
+			position += 2;
+			array++;
+			
+		} else {
+
+			return;
+		}
+		
     }
-
+	
+	clear_terminal();
+    
 }
+
+
 
 void timer_tick_handler() {
     // do something when timer ticks
@@ -127,10 +151,25 @@ void clear_terminal() {
         *framebuffer = *message;
         *(framebuffer + 1) = 0x2;
         framebuffer += 2;
-	amout_of_iteration++;
+		amout_of_iteration++;
     }
+	
+	cursor_position = 0;
 
- 
+	resetPosition();
+ 	
+}
+
+void resetPosition() {
+	
+	firstPosition = (char *) 0xb8000 + (160 * current_row);
+	put_cursor(80 * current_row);
+}
+
+void move_next_line() {
+	resetPosition();
+	firstPosition = firstPosition + 160;
+	
 }
 
 /**
@@ -139,7 +178,6 @@ void clear_terminal() {
 void kernel_entry() {
     init_kernel();
     keyboard_set_handler(write_letter);
-    //keyboard_set_handler(clear_last_char);
 
     timer_set_handler(timer_tick_handler);
     /*char *list_command = {"help", "clear"};
