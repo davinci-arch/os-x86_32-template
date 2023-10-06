@@ -3,6 +3,9 @@
 #include "drivers/timer/timer.h"
 #include "drivers/serial_port/serial_port.h"
 
+#define sizeOfCommand 80
+#define initialPosition 0xb8000
+
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
 }
@@ -19,6 +22,8 @@ void init_kernel() {
     enable_interrupts();
 }
 
+
+char *findStartCommand(char *startAddress);
 
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
@@ -40,17 +45,7 @@ _Noreturn void halt_loop() {
 }
 
 void key_handler(struct keyboard_event event) {
-    /*if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-	char *message = &event.key_character;
-        char *framebuffer = (char *) 0xb8000;
-
-        while (*message != '\0') {
-            *framebuffer = *message;
-            *(framebuffer + 1) = 0x2;
-            framebuffer += 2;
-            message++;
-        }
-    } */
+   
 }
 
 char *firstPosition = (char *) 0xb8000;
@@ -69,9 +64,9 @@ void write_letter(struct keyboard_event event) {
 	}
 
 	if (*message == '\n') {
-	    choseCommand();		
+	    choseCommand();	
+		current_row++;	
 		move_next_line();
-		current_row++;
 	}
 	
 	
@@ -82,7 +77,7 @@ void removeSymbol() {
 
     char *message = " ";
 
-    if (firstPosition > 0xb8000) {
+    if (firstPosition > 0xb8000 + (160 * current_row)) {
 
 		firstPosition -= 2;
 	
@@ -111,7 +106,7 @@ void choseCommand() {
 
     resetPosition();
 
-	char *position = firstPosition;
+	char *position = findStartCommand(firstPosition);
 
     int count = 0;
     char *array = "clear";
@@ -123,7 +118,6 @@ void choseCommand() {
 			array++;
 			
 		} else {
-
 			return;
 		}
 		
@@ -134,6 +128,33 @@ void choseCommand() {
 }
 
 
+
+char *findStartCommand(char *startAddress) {
+
+	while (*startAddress == ' ') {
+		startAddress += 2;
+	}
+	return startAddress;
+}
+
+/*char defineCommand(char *findAddress) {
+
+	char *startAddressOfCommand = findStartCommand(findAddress);
+
+	char command[sizeOfCommand];
+
+	int i = 0;
+	while (startAddressOfCommand != '\0') {
+		
+		*(startAddressOfCommand+1) = 0x2;
+		command[i] = *startAddressOfCommand;
+		startAddressOfCommand += 2;
+		i++;
+	}
+
+	
+	return command;
+}*/
 
 void timer_tick_handler() {
     // do something when timer ticks
@@ -154,7 +175,7 @@ void clear_terminal() {
 		amout_of_iteration++;
     }
 	
-	cursor_position = 0;
+	
 
 	resetPosition();
  	
@@ -162,12 +183,13 @@ void clear_terminal() {
 
 void resetPosition() {
 	
-	firstPosition = (char *) 0xb8000 + (160 * current_row);
+	firstPosition = (char *) initialPosition + (160 * current_row);
 	put_cursor(80 * current_row);
+	cursor_position = 0;
 }
 
 void move_next_line() {
-	resetPosition();
+	put_cursor(80 * current_row);
 	firstPosition = firstPosition + 160;
 	
 }
