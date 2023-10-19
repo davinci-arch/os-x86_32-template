@@ -2,9 +2,20 @@
 #include "drivers/keyboard/keyboard.h"
 #include "drivers/timer/timer.h"
 #include "drivers/serial_port/serial_port.h"
+#include "data/dataUtils.h"
 
-#define sizeOfCommand 80
-#define initialPosition 0xb8000
+#define startAddress 0xb8000
+#define lineSign "$ "
+#define amountOfLine 25
+#define amountOfColumn 80
+
+char *currentAddress = (char *) startAddress;
+int currentRow = 1;
+int cursorPosition = 2;
+
+void clearTerminal();
+void init_terminal();
+
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -20,10 +31,47 @@ void init_kernel() {
     configure_default_serial_port();
     set_exception_handler(exception_handler);
     enable_interrupts();
+	init_terminal();
+}
+
+void init_terminal() {
+
+	clearTerminal();
+
+	char *sign = &lineSign;
+
+	while (*sign != '\0') {
+		
+		*currentAddress = *sign;
+		*(currentAddress + 1) = 0x2;
+		currentAddress += 2;
+		sign++; 
+	}
+
+
 }
 
 
-char *findStartCommand(char *startAddress);
+clearTerminal() {
+
+	currentRow = 1;
+	cursorPosition = 2;
+	currentAddress = startAddress;
+	put_cursor(cursorPosition);
+
+	char clearSymbol = ' ';
+
+	char *frameBuffer = (char *) startAddress;
+	
+	int count = 0;
+	while (count <= (amountOfColumn * amountOfLine)) {
+
+		*frameBuffer = clearSymbol;
+		frameBuffer += 2;
+		count++;
+	}
+
+}
 
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
@@ -45,176 +93,50 @@ _Noreturn void halt_loop() {
 }
 
 void key_handler(struct keyboard_event event) {
-   
-}
+   if (event.key_character && event.type == EVENT_KEY_PRESSED) {
+		
+		
 
-char *firstPosition = (char *) 0xb8000;
-int cursor_position = 0;
-int current_row = 0;
+		if (event.key == KEY_BACKSPACE) {
+			removeCharacter();
 
-void write_letter(struct keyboard_event event) {
+		} else {
+			*currentAddress = event.key_character;
+			currentAddress += 2;
+			cursorPosition++;
+			put_cursor(cursorPosition);
+		}
 
-   if (event.key_character && event.type == EVENT_KEY_PRESSED) { 
-	char *message = &event.key_character;
-
-	if (*message == '\b') {
-	    removeSymbol();
-	} else {
-	    writeSymbol(message);
-	}
-
-	if (*message == '\n') {
-	    choseCommand();	
-		current_row++;	
-		move_next_line();
-	}
-	
-	
    }
 }
 
-void removeSymbol() {
+void removeCharacter() {
 
-    char *message = " ";
+	char *startAdr = startAddress;
+	startAdr += 4;
 
-    if (firstPosition > 0xb8000 + (160 * current_row)) {
-
-		firstPosition -= 2;
-	
-		*firstPosition = *message;
-
-		put_cursor(--cursor_position + (80 * current_row));
+	if (currentAddress > startAdr) {
+		currentAddress -= 2;
+		*currentAddress = ' ';
+		--cursorPosition;
+		put_cursor(cursorPosition);
 	}
-        
-     
 }
 
-
-void writeSymbol(char *character) {
-
-
-    *firstPosition = *character;
-    *(firstPosition + 1) = 0x2;
-    firstPosition += 2;
-
-    put_cursor(++cursor_position + (80 * current_row));
-    
-
-}
-
-void choseCommand() {
-
-    resetPosition();
-
-	char *position = findStartCommand(firstPosition);
-
-    int count = 0;
-    char *array = "clear";
-
-    while (*position != '\0' && *array != '\0') {
-		
-		if (*position == *array) {
-			position += 2;
-			array++;
-			
-		} else {
-			return;
-		}
-		
-    }
-	
-	clear_terminal();
-    
-}
-
-
-
-char *findStartCommand(char *startAddress) {
-
-	while (*startAddress == ' ') {
-		startAddress += 2;
-	}
-	return startAddress;
-}
-
-/*char defineCommand(char *findAddress) {
-
-	char *startAddressOfCommand = findStartCommand(findAddress);
-
-	char command[sizeOfCommand];
-
-	int i = 0;
-	while (startAddressOfCommand != '\0') {
-		
-		*(startAddressOfCommand+1) = 0x2;
-		command[i] = *startAddressOfCommand;
-		startAddressOfCommand += 2;
-		i++;
-	}
-
-	
-	return command;
-}*/
 
 void timer_tick_handler() {
     // do something when timer ticks
 }
 
-/**
-* This is procedure which cleared a terminal
-*/
-void clear_terminal() {
-    // demo of printing hello world to screen using framebuffer
-    char *message = " ";
-    char *framebuffer = (char *) 0xb8000;
-    int amout_of_iteration = 0;
-    while (amout_of_iteration < (80*25)) {
-        *framebuffer = *message;
-        *(framebuffer + 1) = 0x2;
-        framebuffer += 2;
-		amout_of_iteration++;
-    }
-	
-	
-
-	resetPosition();
- 	
-}
-
-void resetPosition() {
-	
-	firstPosition = (char *) initialPosition + (160 * current_row);
-	put_cursor(80 * current_row);
-	cursor_position = 0;
-}
-
-void move_next_line() {
-	put_cursor(80 * current_row);
-	firstPosition = firstPosition + 160;
-	
-}
 
 /**
  * This is where the bootloader transfers control to.
  */
 void kernel_entry() {
     init_kernel();
-    keyboard_set_handler(write_letter);
+    keyboard_set_handler(key_handler);
 
     timer_set_handler(timer_tick_handler);
-    /*char *list_command = {"help", "clear"};
-    // demo of printing hello world to screen using framebuffer
-    char *message = "Hello world!";
-    char *framebuffer = (char *) 0xb8000;
-
-    while (*message != '\0') {
-        *framebuffer = *message;
-        *(framebuffer + 1) = 0x2;
-        framebuffer += 2;
-        message++;
-    } */
-    clear_terminal(); 
-    put_cursor(cursor_position);
 
     halt_loop();
 }
