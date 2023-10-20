@@ -11,4 +11,6 @@ struct TerminalState{
 
 void saveCurrentState(char *startAddress);
 
+int defineCurrentLine(char *startAddress, char *currentAddres, int amountOfColumn);
+
 #endif

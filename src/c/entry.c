@@ -3,19 +3,20 @@
 #include "drivers/timer/timer.h"
 #include "drivers/serial_port/serial_port.h"
 #include "data/dataUtils.h"
+#include "data/commandUtils.h"
+#include "stringUtils/stringHandler.h";
 
+#define lengthSignLine 4
 #define startAddress 0xb8000
-#define lineSign "$ "
 #define amountOfLine 25
 #define amountOfColumn 80
 
 char *currentAddress = (char *) startAddress;
-int currentRow = 1;
+// int currentRow = 1;
 int cursorPosition = 2;
 
-void clearTerminal();
-void init_terminal();
-
+void resetParam();
+void moveNextLine();
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -31,47 +32,20 @@ void init_kernel() {
     configure_default_serial_port();
     set_exception_handler(exception_handler);
     enable_interrupts();
-	init_terminal();
+	clearTerminal((char*)startAddress, amountOfColumn, amountOfLine);
+	resetParam();
+	fillCommandStrucutre();
 }
 
-void init_terminal() {
+void resetParam() {
 
-	clearTerminal();
-
-	char *sign = &lineSign;
-
-	while (*sign != '\0') {
-		
-		*currentAddress = *sign;
-		*(currentAddress + 1) = 0x2;
-		currentAddress += 2;
-		sign++; 
-	}
-
-
-}
-
-
-clearTerminal() {
-
-	currentRow = 1;
-	cursorPosition = 2;
+	// currentRow = 1;
+	cursorPosition = lengthSignLine / 2;
 	currentAddress = startAddress;
 	put_cursor(cursorPosition);
-
-	char clearSymbol = ' ';
-
-	char *frameBuffer = (char *) startAddress;
-	
-	int count = 0;
-	while (count <= (amountOfColumn * amountOfLine)) {
-
-		*frameBuffer = clearSymbol;
-		frameBuffer += 2;
-		count++;
-	}
-
+	currentAddress += lengthSignLine;
 }
+
 
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
@@ -93,18 +67,29 @@ _Noreturn void halt_loop() {
 }
 
 void key_handler(struct keyboard_event event) {
+
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
 		
-		
-
 		if (event.key == KEY_BACKSPACE) {
 			removeCharacter();
 
+		} else if (event.key == KEY_ENTER)  {
+
+			int currentLine = defineCurrentLine(startAddress, currentAddress, amountOfColumn) - 1;
+
+			char *adr = startAddress + (amountOfColumn * 2 * currentLine);
+			adr += lengthSignLine;
+
+			int k = defineCommand(adr);
+
+			if (k == 0) {
+				adr -= lengthSignLine;
+				currentAddress = helpCommand(adr, amountOfColumn);
+				moveNextLine();
+			}
+
 		} else {
-			*currentAddress = event.key_character;
-			currentAddress += 2;
-			cursorPosition++;
-			put_cursor(cursorPosition);
+			writeCharacter(event.key_character);
 		}
 
    }
@@ -112,8 +97,10 @@ void key_handler(struct keyboard_event event) {
 
 void removeCharacter() {
 
-	char *startAdr = startAddress;
-	startAdr += 4;
+	int currentLine = defineCurrentLine(startAddress, currentAddress, amountOfColumn) - 1;
+
+	char *startAdr = startAddress + (amountOfColumn * 2 * currentLine);
+	startAdr += lengthSignLine;
 
 	if (currentAddress > startAdr) {
 		currentAddress -= 2;
@@ -123,6 +110,38 @@ void removeCharacter() {
 	}
 }
 
+
+
+void writeCharacter(char letter) {
+
+	char *bound = startAddress + ((amountOfColumn * 2) * defineCurrentLine(startAddress, currentAddress, amountOfColumn) - 2);
+
+	if (currentAddress < bound) {
+		*currentAddress = letter;
+		currentAddress += 2;
+		cursorPosition++;
+		put_cursor(cursorPosition);	
+	}
+}
+
+void moveNextLine() {
+
+	int currentLine = defineCurrentLine(startAddress, currentAddress, amountOfColumn);
+
+	currentAddress = startAddress + (amountOfColumn * 2 * currentLine);
+	char *sign = "$ ";
+
+	while (*sign != '\0') {
+		
+		*currentAddress = *sign;
+		*(currentAddress + 1) = 0x2;
+		currentAddress += 2;
+		sign++; 
+	}
+
+	cursorPosition = amountOfColumn * currentLine + lengthSignLine / 2;
+	put_cursor(cursorPosition);
+}
 
 void timer_tick_handler() {
     // do something when timer ticks

@@ -1,7 +1,8 @@
 #ifndef STRINGUTILS_H
 #define STRINGUTILS_H
 
-void findStartCommand(int currentLine, char *currentAddress);
+int defineCommand(char *currentAddress);
 
+char *defineStartCommand(char *currentAddress);
 
 #endif
