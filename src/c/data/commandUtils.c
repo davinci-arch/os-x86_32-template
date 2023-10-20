@@ -1,7 +1,4 @@
 #include "commandUtils.h"
-#define lineSign "$ "
-#define lengthSignLine 4
-
 
 void fillCommandStrucutre() {
 
@@ -10,7 +7,8 @@ void fillCommandStrucutre() {
 }
 
 
-void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine) {
+
+void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int amountOfLine) {
     char clearSymbol = ' ';
 
 	char *frameBuffer = (char *) startAddress;
@@ -23,11 +21,11 @@ void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine) {
 		count++;
 	}
 
-	printSignLine(startAddress);
+	printSignLine(startAddress, lineSign);
 }
 
-void printSignLine(char *startAddress) {
-    char *sign = &lineSign;
+void printSignLine(char *startAddress, char *lineSign) {
+    char *sign = lineSign;
 
 	while (*sign != '\0') {
 		
@@ -59,3 +57,5 @@ char *helpCommand(char *currentAddress, int amountOfColumn) {
 
     return currentAddress;
 }
+
+
