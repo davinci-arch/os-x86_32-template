@@ -118,6 +118,8 @@ void executeCommand() {
             break;
         default:
             // printWrongMessage
+            currentAddress = getWrongMessage(adr, amountOfColumn);
+            moveNextLine();
             break;
     }
 

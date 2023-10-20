@@ -17,6 +17,7 @@ void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int a
 	while (count <= (amountOfColumn * amountOfLine)) {
 
 		*frameBuffer = clearSymbol;
+        *(frameBuffer + 1) = 0x7;
 		frameBuffer += 2;
 		count++;
 	}
@@ -58,4 +59,21 @@ char *helpCommand(char *currentAddress, int amountOfColumn) {
     return currentAddress;
 }
 
+char *getWrongMessage(char *currentAddress, int amountOfColumn) {
+
+    currentAddress += amountOfColumn * 2;
+
+    char *message = "You wrote wrong command!";
+
+    while (*message != '\0') {
+        
+        *currentAddress = *message;
+        *(currentAddress + 1) = 0x4;
+        message++;
+        currentAddress += 2;
+    }
+
+    return currentAddress;
+
+}
 

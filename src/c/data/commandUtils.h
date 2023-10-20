@@ -14,6 +14,7 @@ void fillCommandStrucutre();
 void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int amountOfLine);
 void printSignLine(char *startAddress, char *lineSign);
 
-char *helpCommand(char *currentAddress, int amountOfColumn);\
+char *helpCommand(char *currentAddress, int amountOfColumn);
+char *getWrongMessage(char *currentAddress, int amountOfColumn);
 
 #endif;
