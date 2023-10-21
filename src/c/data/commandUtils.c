@@ -5,6 +5,7 @@ void fillCommandStrucutre() {
 
     commands[0].command = "help";
     commands[1].command = "clear";
+
 }
 
 

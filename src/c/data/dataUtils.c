@@ -38,7 +38,7 @@ int defineCurrentLine() {
     int start = (int) START_ADDRESS;
     int end = (int) currentAddress;
 
-    int result = (end % start) / 160;
+    int result = (end - start) / 160;
 
     return result + 1;
 
@@ -129,7 +129,7 @@ void executeCommand() {
             break;
     }
 
-    if (currentLine == amountOfLine) {
+    if (currentLine <= amountOfLine) {
         overflowView();
     }
 }
@@ -137,12 +137,13 @@ void executeCommand() {
 
 void overflowView() {
 
+    int cnt = defineCurrentLine() - amountOfLine;
         
-    int overflow = -1;
-    
-    while(overflow != 0) {
-        overflow = checkLastLineIsEmpty();
+    int counter = 0;
+    while(counter < cnt) {
+        
         moveAllLineUp();
+        counter++;
     }
 
 
@@ -169,29 +170,13 @@ void moveAllLineUp() {
 
     }
 
+    currentLine = amountOfLine - 1;
     cursorPosition = amountOfColumn * currentLine + lengthSignLine / 2;
     put_cursor(cursorPosition);
-    currentLine = amountOfLine - 1;
-    currentAddress = START_ADDRESS + (amountOfColumn * 2 * currentLine + lengthSignLine);
-    
+
+    currentAddress = START_ADDRESS + (amountOfColumn * 2 * currentLine) + lengthSignLine;
+    currentLine = defineCurrentLine();
 }
 
-int checkLastLineIsEmpty() {
-
-    char *adr = START_ADDRESS + (amountOfColumn * 2) * amountOfLine;
-
-    for (int i = 0; i < amountOfColumn; i++) {
-
-        if (*adr != ' ') {
-            return 1;
-        } else {
-            adr += 2;
-
-        }
-        
-    }
-
-    return 0;
-}
 
 

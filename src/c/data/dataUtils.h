@@ -17,6 +17,7 @@ void moveNextLine();
 void resetParam();
 int defineCurrentLine();
 void executeCommand();
+void overflowView();
 void moveAllLineUp();
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
