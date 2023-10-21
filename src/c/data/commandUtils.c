@@ -1,9 +1,10 @@
 #include "commandUtils.h"
+#include "dataUtils.h";
 
 void fillCommandStrucutre() {
 
     commands[0].command = "help";
-    commands[1].command = "clear"; 
+    commands[1].command = "clear";
 }
 
 

@@ -61,13 +61,16 @@ void removeCharacter() {
 
 void writeCharacter(char letter) {
 
-	// char *bound = START_ADDRESS + ((amountOfColumn * 2) * defineCurrentLine() - 2);
+	char *bound = START_ADDRESS + ((amountOfColumn * 2) * amountOfLine) - 2; // max length (80 * 2) * 25
     
-    *currentAddress = letter;
-    currentAddress += 2;
-    cursorPosition++;
-    put_cursor(cursorPosition);	
+    if (currentAddress < bound) {
+        *currentAddress = letter;
+        currentAddress += 2;
+        cursorPosition++;
+        put_cursor(cursorPosition);	
 	
+    }
+    
 }
 
 void moveNextLine() {
@@ -99,31 +102,96 @@ void resetParam() {
 }
 
 void executeCommand() {
+
     int currentLine = defineCurrentLine();
-
+    
     char *adr = START_ADDRESS + (amountOfColumn * 2 * (currentLine - 1));
-    adr += lengthSignLine;
 
-    int numberCommand = defineCommand(adr);
+    int numberCommand = defineCommand(adr, lengthSignLine);
+
 
     switch (numberCommand) {
+
         case 0:
             currentAddress = helpCommand(adr, amountOfColumn);
             moveNextLine();
             break;
+
         case 1:
-            //clear
+
             clearTerminal(START_ADDRESS, lineSign, amountOfColumn, amountOfLine);
             resetParam();
             break;
+
         default:
-            // printWrongMessage
             currentAddress = getWrongMessage(adr, amountOfColumn);
             moveNextLine();
             break;
     }
 
+    if (currentLine == amountOfLine) {
+        overflowView();
+    }
 }
 
+
+void overflowView() {
+
+        
+    int overflow = -1;
+    
+    while(overflow != 0) {
+        overflow = checkLastLineIsEmpty();
+        moveAllLineUp();
+    }
+
+
+}
+
+void moveAllLineUp() {
+
+    char *addressBefore = (char *) 0xb7F60;
+    char *addressAfter = (char *) START_ADDRESS;
+
+
+
+    for (int i = 1; i <= amountOfColumn; i++) {
+
+        int counter = 0;
+
+        while (counter < amountOfColumn) {
+            *addressBefore = *addressAfter;
+            *(addressBefore + 1) = *(addressAfter + 1); // Move a style text too
+            addressBefore += 2;
+            addressAfter += 2;
+            counter++;
+        }
+
+    }
+
+    cursorPosition = amountOfColumn * currentLine + lengthSignLine / 2;
+    put_cursor(cursorPosition);
+    currentLine = amountOfLine - 1;
+    currentAddress = START_ADDRESS + (amountOfColumn * 2 * currentLine + lengthSignLine);
+    
+}
+
+int checkLastLineIsEmpty() {
+
+    char *adr = START_ADDRESS + (amountOfColumn * 2) * amountOfLine;
+
+    for (int i = 0; i < amountOfColumn; i++) {
+
+        if (*adr != ' ') {
+            return 1;
+        } else {
+            adr += 2;
+
+        }
+        
+    }
+
+    return 0;
+}
 
 

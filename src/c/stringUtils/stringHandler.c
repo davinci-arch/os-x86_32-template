@@ -1,8 +1,9 @@
 #include "stringHandler.h"
 #include "../data/commandUtils.h";
 
-int defineCommand(char *currentAddress) {
+int defineCommand(char *currentAddress, int lengthSignLine) {
     char *startCommand = defineStartCommand(currentAddress);
+    startCommand += lengthSignLine;
 
     int t = -1;
     for (int i = 0; i < 2; i++) {
