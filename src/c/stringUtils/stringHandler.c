@@ -2,11 +2,13 @@
 #include "../data/commandUtils.h";
 
 int defineCommand(char *currentAddress, int lengthSignLine) {
+
+    currentAddress += lengthSignLine;
+
     char *startCommand = defineStartCommand(currentAddress);
-    startCommand += lengthSignLine;
 
     int t = -1;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
 
         char *currentCommand = commands[i].command;
 

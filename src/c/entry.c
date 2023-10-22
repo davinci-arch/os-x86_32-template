@@ -34,16 +34,6 @@ _Noreturn void halt_loop() {
 void key_handler(struct keyboard_event event) {
 
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-        char *adr = 0xb8000 + (80 * 2) * 24 + 10;
-		
-        // char *adr = (char *) 0xb8C80;
-        // char *adr2 = (char *)0xb92C0;
-
-        // if (*adr == ' ') {
-        //     *adr = event.key_character;
-
-        // }
-
 
 		if (event.key == KEY_BACKSPACE) {
 			removeCharacter();

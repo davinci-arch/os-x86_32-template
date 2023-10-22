@@ -5,6 +5,9 @@ void fillCommandStrucutre() {
 
     commands[0].command = "help";
     commands[1].command = "clear";
+    commands[2].command = "move";
+    commands[3].command = "back";
+
 
 }
 
@@ -42,7 +45,7 @@ void printSignLine(char *startAddress, char *lineSign) {
 char *helpCommand(char *currentAddress, int amountOfColumn) {
 
     char *saveAdr = currentAddress;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
 
         currentAddress += amountOfColumn * 2;
         

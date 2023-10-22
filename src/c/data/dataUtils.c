@@ -1,5 +1,8 @@
 #include "dataUtils.h"
 #include "../stringUtils/stringHandler.h"
+#include "blockDatautils.h"
+#include "../states/stateUtil.h"
+
 #define START_ADDRESS 0xb8000
 
 
@@ -19,13 +22,14 @@ void put_cursor(unsigned short pos) {
     out(0x3D5, pos & 0x00FF);
 }
 
-void saveCurrentState() {
 
-}
 
 void init_base_configuration() {
 
-    
+    char *firstBlock = START_ADDRESS; // mainBlock
+    char *secondBlock = START_ADDRESS + (amountOfColumn * 2) * (amountOfLine - 1) * 3; // buffer block
+
+    initMainTerminalStateBlock(firstBlock, secondBlock);
     fillCommandStrucutre();
     clearTerminal(START_ADDRESS, lineSign, amountOfColumn, amountOfLine);
     resetParam();
@@ -47,8 +51,7 @@ int defineCurrentLine() {
 void removeCharacter() {
 
 
-	char *startAdr = START_ADDRESS + (amountOfColumn * 2 * currentLine);
-	startAdr += lengthSignLine;
+	char *startAdr = START_ADDRESS + ((amountOfColumn * 2) * currentLine) + lengthSignLine;
     
 
 	if (currentAddress != startAdr) {
@@ -107,8 +110,8 @@ void executeCommand() {
     
     char *adr = START_ADDRESS + (amountOfColumn * 2 * (currentLine - 1));
 
+    
     int numberCommand = defineCommand(adr, lengthSignLine);
-
 
     switch (numberCommand) {
 
@@ -121,6 +124,30 @@ void executeCommand() {
 
             clearTerminal(START_ADDRESS, lineSign, amountOfColumn, amountOfLine);
             resetParam();
+            break;
+        case 2:
+            saveCurrentState(0, 1, cursorPosition, amountOfColumn, amountOfLine, 0);
+            printSignLine(START_ADDRESS, lineSign);
+            resetParam();
+
+            break;
+
+        case 3:
+
+            saveCurrentState(1, 0, cursorPosition, amountOfColumn, amountOfLine, 1);
+            
+           // int saveValue = states[0].cursorPosition;
+
+            // currentLine = saveValue / amountOfColumn;   move to previous current position
+
+            // int positionOnLine = (saveValue % amountOfColumn) * 2;
+
+            // currentAddress = START_ADDRESS + (amountOfColumn * 2) * currentLine + positionOnLine;
+
+            // cursorPosition = saveValue;
+            // put_cursor(saveValue);
+            // moveNextLine();
+            
             break;
 
         default:
@@ -156,7 +183,7 @@ void moveAllLineUp() {
 
 
 
-    for (int i = 1; i <= amountOfColumn; i++) {
+    for (int i = 0; i < amountOfLine * 2; i++) { // 
 
         int counter = 0;
 
@@ -175,7 +202,7 @@ void moveAllLineUp() {
     put_cursor(cursorPosition);
 
     currentAddress = START_ADDRESS + (amountOfColumn * 2 * currentLine) + lengthSignLine;
-    currentLine = defineCurrentLine();
+
 }
 
 

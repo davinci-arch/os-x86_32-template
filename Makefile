@@ -14,6 +14,9 @@ SRC_C   := \
 	src/c/stringUtils/stringHandler.c \
 	src/c/data/commandUtils.c \
 	src/c/data/dataUtils.c \
+	src/c/data/blockDatautils.c \
+	src/c/states/stateUtil.c \
+
 
 
 
