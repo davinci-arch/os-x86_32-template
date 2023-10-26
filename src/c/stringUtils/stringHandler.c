@@ -8,15 +8,18 @@ int defineCommand(char *currentAddress, int lengthSignLine) {
     char *startCommand = defineStartCommand(currentAddress);
 
     int t = -1;
-    for (int i = 0; i < 4; i++) {
+
+    char *tempAddr = startCommand;
+
+    for (int i = 0; i < 7; i++) {
 
         char *currentCommand = commands[i].command;
 
         while (*currentCommand != '\0') {
 
-            if (*startCommand == *currentCommand) {
+            if (*tempAddr == *currentCommand) {
                 currentCommand++;
-                startCommand += 2;
+                tempAddr += 2;
                 t = i;
             } else {
                 t = -1;
@@ -26,6 +29,8 @@ int defineCommand(char *currentAddress, int lengthSignLine) {
 
         if (t >= 0) {
             return t;
+        } else {
+            tempAddr = startCommand;
         }
     }
     return t;
@@ -40,6 +45,34 @@ char *defineStartCommand(char *currentAddress) {
 
     return currentAddress;
 
+}
+
+char *defineStartFileName(char *currentAddress, int lengthSignLine) {
+
+    currentAddress += lengthSignLine;
+
+    char *fileName = defineStartCommand(currentAddress);
+
+    fileName = skipWord(fileName);
+
+    
+    while (*fileName == ' ') {
+        fileName += 2;
+    }
+
+    return fileName;
+    
+
+}
+
+char *skipWord(char *address) {
+
+    while (*address != ' ') {
+        address += 2;
+    }
+
+    return address;
+    
 }
 
 

@@ -1,12 +1,16 @@
 #include "commandUtils.h"
 #include "dataUtils.h";
+#include "../file/fileHandler.h"
 
 void fillCommandStrucutre() {
 
     commands[0].command = "help";
     commands[1].command = "clear";
-    commands[2].command = "move";
-    commands[3].command = "back";
+    commands[2].command = "create";
+    commands[3].command = "delete";
+    commands[4].command = "edit";
+    commands[5].command = "ls";
+    commands[6].command = "read";
 
 
 }
@@ -45,7 +49,7 @@ void printSignLine(char *startAddress, char *lineSign) {
 char *helpCommand(char *currentAddress, int amountOfColumn) {
 
     char *saveAdr = currentAddress;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 7; i++) {
 
         currentAddress += amountOfColumn * 2;
         
@@ -81,4 +85,15 @@ char *getWrongMessage(char *currentAddress, int amountOfColumn) {
     return currentAddress;
 
 }
+
+void createFile(char *currentAddress, int lengthSignLine) {
+
+    createNewFile(currentAddress, lengthSignLine);
+}
+
+
+char *ls(char *currentAddress) {
+    return printAllFiles(currentAddress);
+}
+
 

@@ -4,7 +4,10 @@
 #include "drivers/serial_port/serial_port.h"
 #include "data/dataUtils.h"
 #include "data/commandUtils.h"
-#include "stringUtils/stringHandler.h";
+#include "stringUtils/stringHandler.h"
+#include "file/fileHandler.h"
+
+#define FIRSTADDRESS 0xb8000
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -31,9 +34,57 @@ _Noreturn void halt_loop() {
     while (1) { halt(); }
 }
 
+char *frameBuffer = (char *) 0xb8004;
+
+
+
 void key_handler(struct keyboard_event event) {
 
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
+
+
+        // saveNameFile :
+
+
+        // *frameBuffer = event.key_character;
+        // frameBuffer += 2;
+
+        // files[0].fileNameAddress = FIRSTADDRESS + (80 * 25);
+
+        // if (event.key == KEY_ENTER) {
+        //     char *findFilename = FIRSTADDRESS;
+        //     findFilename += 2;
+            
+        //     while (*findFilename == ' ') {
+        //         findFilename += 2;
+        //     }
+
+            
+        //     char *filePos = files[0].fileNameAddress;
+
+        //     while (*findFilename != ' ') {
+        //         *filePos = *findFilename;
+        //         findFilename += 2;
+        //         filePos += 2;
+                
+        //     }
+           
+
+
+        
+        //     frameBuffer = FIRSTADDRESS + (80 * 2);
+
+        //     char *secondFilePos = files[0].fileNameAddress;
+
+        //     while (*secondFilePos != '\0') {
+        //         *frameBuffer = *secondFilePos;
+        //         frameBuffer += 2;
+        //         secondFilePos += 2;
+        //     }
+
+        // }
+
+        
 
 		if (event.key == KEY_BACKSPACE) {
 			removeCharacter();
@@ -45,6 +96,7 @@ void key_handler(struct keyboard_event event) {
 		} else {
 			writeCharacter(event.key_character);
 		}
+
 
    }
 }

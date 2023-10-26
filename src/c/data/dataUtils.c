@@ -126,30 +126,46 @@ void executeCommand() {
             resetParam();
             break;
         case 2:
-            saveCurrentState(0, 1, cursorPosition, amountOfColumn, amountOfLine, 0);
-            printSignLine(START_ADDRESS, lineSign);
-            resetParam();
+
+            
+            createFile(adr, lengthSignLine);
+            moveNextLine();
+            //create file
+
+            // saveCurrentState(0, 1, cursorPosition, amountOfColumn, amountOfLine, 0);
+            // printSignLine(START_ADDRESS, lineSign);
+            // resetParam();
 
             break;
 
         case 3:
-
-            saveCurrentState(1, 0, cursorPosition, amountOfColumn, amountOfLine, 1);
+            // delete file
+            // saveCurrentState(1, 0, cursorPosition, amountOfColumn, amountOfLine, 1);
             
-           // int saveValue = states[0].cursorPosition;
 
-            // currentLine = saveValue / amountOfColumn;   move to previous current position
+        //    int saveValue = states[0].cursorPosition;
 
-            // int positionOnLine = (saveValue % amountOfColumn) * 2;
+        //     currentLine = saveValue / amountOfColumn;   // move to previous current position;
 
-            // currentAddress = START_ADDRESS + (amountOfColumn * 2) * currentLine + positionOnLine;
+        //     int positionOnLine = (saveValue % amountOfColumn) * 2;
 
-            // cursorPosition = saveValue;
-            // put_cursor(saveValue);
-            // moveNextLine();
+        //     currentAddress = START_ADDRESS + (amountOfColumn * 2) * currentLine + positionOnLine;
+
+        //     cursorPosition = saveValue;
+        //     put_cursor(saveValue);
+        //     moveNextLine();
             
             break;
+        case 4:
 
+            //edit file    
+            break;
+
+        case 5:
+            //display all createad files
+            currentAddress = ls(adr);
+            moveNextLine();
+            break;
         default:
             currentAddress = getWrongMessage(adr, amountOfColumn);
             moveNextLine();

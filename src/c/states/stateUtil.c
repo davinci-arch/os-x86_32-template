@@ -1,5 +1,5 @@
 #include "stateUtil.h"
-#include "../states/stateUtil.h"
+#include "../data/blockDatautils.h"
 
 void fillTerminalState(char *startAddress, int cursorPos, int pos) {
     states[pos].startBlock = startAddress;
