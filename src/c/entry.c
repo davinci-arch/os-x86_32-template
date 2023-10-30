@@ -6,6 +6,7 @@
 #include "data/commandUtils.h"
 #include "stringUtils/stringHandler.h"
 #include "file/fileHandler.h"
+#include "states/stateUtil.h"
 
 #define FIRSTADDRESS 0xb8000
 
@@ -39,9 +40,9 @@ char *frameBuffer = (char *) 0xb8004;
 
 
 void key_handler(struct keyboard_event event) {
-
+    
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-
+        
 
         // saveNameFile :
 
@@ -84,19 +85,30 @@ void key_handler(struct keyboard_event event) {
 
         // }
 
+ // int currentLine = cursorPosition / 80;
+
+            // char *adr = FIRSTADDRESS + ((80 * 2) * (currentLine-1));
+            // adr += (cursorPosition - (80 * currentLine)) * 2;
+
+
+        if (event.key == KEY_BACKSPACE) {
+            removeCharacter();
         
+        } else if (event.key == KEY_ENTER)  {
 
-		if (event.key == KEY_BACKSPACE) {
-			removeCharacter();
-			
-		} else if (event.key == KEY_ENTER)  {
+            if (fileOn.isEdit == 0) {
+                executeCommand();
+            }
+            else {
+                saveChanges();
+                moveNextLine();
+            }
+        } else {
+            writeCharacter(event.key_character);
+        }
 
-			executeCommand();
-
-		} else {
-			writeCharacter(event.key_character);
-		}
-
+        
+        
 
    }
 }

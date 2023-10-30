@@ -11,8 +11,10 @@ struct Command {
 } commands[6];
 
 void fillCommandStrucutre();
-void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int amountOfLine);
+void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine);
 void printSignLine(char *startAddress, char *lineSign);
+void editFile(char *currentAddress, int lengthSignLine, int currentCursorPosition, int amountOfColumn, int amountOfLine, char *baseAddress);
+void saveChangeFile(int currentCursorPosition, int amountOfColumn, int amountOfLine);
 
 char *helpCommand(char *currentAddress, int amountOfColumn);
 char *getWrongMessage(char *currentAddress, int amountOfColumn);

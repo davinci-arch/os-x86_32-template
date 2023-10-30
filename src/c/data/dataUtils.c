@@ -2,6 +2,7 @@
 #include "../stringUtils/stringHandler.h"
 #include "blockDatautils.h"
 #include "../states/stateUtil.h"
+#include "../file/fileHandler.h"
 
 #define START_ADDRESS 0xb8000
 
@@ -26,15 +27,12 @@ void put_cursor(unsigned short pos) {
 
 void init_base_configuration() {
 
-    char *firstBlock = START_ADDRESS; // mainBlock
-    char *secondBlock = START_ADDRESS + (amountOfColumn * 2) * (amountOfLine - 1) * 3; // buffer block
-
-    initMainTerminalStateBlock(firstBlock, secondBlock);
+    changeStartBlock(0, START_ADDRESS);
     fillCommandStrucutre();
-    clearTerminal(START_ADDRESS, lineSign, amountOfColumn, amountOfLine);
+    clearTerminal(START_ADDRESS, amountOfColumn, amountOfLine);
+    printSignLine(START_ADDRESS, lineSign);
     resetParam();
 }
-
 
 
 int defineCurrentLine() {
@@ -122,12 +120,12 @@ void executeCommand() {
 
         case 1:
 
-            clearTerminal(START_ADDRESS, lineSign, amountOfColumn, amountOfLine);
+            clearTerminal(START_ADDRESS, amountOfColumn, amountOfLine);
+            printSignLine(START_ADDRESS, lineSign);
             resetParam();
             break;
         case 2:
 
-            
             createFile(adr, lengthSignLine);
             moveNextLine();
             //create file
@@ -158,7 +156,10 @@ void executeCommand() {
             break;
         case 4:
 
-            //edit file    
+            // const int fileNumber = fileIsExist(defineStartFileName(adr, lengthSignLine));
+
+            editFile(adr, lengthSignLine, cursorPosition, amountOfColumn, amountOfLine, START_ADDRESS);
+            
             break;
 
         case 5:
@@ -177,6 +178,11 @@ void executeCommand() {
     }
 }
 
+
+void saveChanges() {
+    saveChangeFile(cursorPosition, amountOfColumn, amountOfLine);
+    
+}
 
 void overflowView() {
 
@@ -221,5 +227,10 @@ void moveAllLineUp() {
 
 }
 
+void changeAddress(char *newAdr) {
+    currentAddress = newAdr;
+}
 
-
+void changeValueCursorPosition(int value) {
+    cursorPosition = value;
+}

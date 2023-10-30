@@ -1,6 +1,8 @@
 #include "commandUtils.h"
 #include "dataUtils.h";
 #include "../file/fileHandler.h"
+#include "../states/stateUtil.h";
+#include "../stringUtils/stringHandler.h"
 
 void fillCommandStrucutre() {
 
@@ -17,7 +19,7 @@ void fillCommandStrucutre() {
 
 
 
-void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int amountOfLine) {
+void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine) {
     char clearSymbol = ' ';
 
 	char *frameBuffer = (char *) startAddress;
@@ -30,8 +32,6 @@ void clearTerminal(char *startAddress, char *lineSign, int amountOfColumn, int a
 		frameBuffer += 2;
 		count++;
 	}
-
-	printSignLine(startAddress, lineSign);
 }
 
 void printSignLine(char *startAddress, char *lineSign) {
@@ -86,14 +86,46 @@ char *getWrongMessage(char *currentAddress, int amountOfColumn) {
 
 }
 
+
 void createFile(char *currentAddress, int lengthSignLine) {
 
     createNewFile(currentAddress, lengthSignLine);
+    
 }
-
 
 char *ls(char *currentAddress) {
     return printAllFiles(currentAddress);
+}
+
+void editFile(char *currentAddress, int lengthSignLine, int currentCursorPosition, int amountOfColumn, int amountOfLine, char *baseAddress) {
+
+    char *filename = defineStartFileName(currentAddress, lengthSignLine);
+
+    int fileIndex = fileIsExist(filename);
+
+    fileOn.index = fileIndex;
+
+    changeCursor(0, currentCursorPosition); // save main window cursor position;
+    changeCurrentAddress(0, currentAddress);
+    
+    saveCurrentState(0, (fileOn.index + 1), amountOfColumn, amountOfLine);
+    
+
+    fileOn.isEdit = 1;
+
+}
+
+void saveChangeFile(int currentCursorPosition, int amountOfColumn, int amountOfLine) {
+
+    
+ 
+    saveCurrentState((fileOn.index + 1), 0, amountOfColumn, amountOfLine);
+
+
+    fileOn.isEdit = 0;
+    fileOn.index = -1;
+
+
 }
 
 

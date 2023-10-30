@@ -1,26 +1,45 @@
 #include "stateUtil.h"
 #include "../data/blockDatautils.h"
 
-void fillTerminalState(char *startAddress, int cursorPos, int pos) {
-    states[pos].startBlock = startAddress;
-    states[pos].cursorPosition = cursorPos;
-}
 
-void initMainTerminalStateBlock(char *mainBlock, char *bufferMainBlock) {
-    
-    states[0].startBlock = mainBlock;
-    states[1].startBlock = bufferMainBlock;
+void addNewStateBlock(char *startBlock, int cursorPos) {
+
+    int definePosition = defineEmptyBlock();
+
+    states[definePosition].startBlock = startBlock;
+    states[definePosition].cursorPosition = cursorPos; 
 
 }
 
-void saveCurrentState(int firstBlock, int secondBlock, int cursorPos, int amountOfColumn, int amountOfLine, int pos) {
+void changeCursor(int pos, int newCursorPos) {
+
+    states[pos].cursorPosition = newCursorPos;
+}
+
+void changeStartBlock(int pos, char *newStartBlock) {
+
+    states[pos].startBlock = newStartBlock;
+}
+
+void changeCurrentAddress(int pos, char *currAdress) {
+    states[pos].currentAddress = currAdress;
+}
+
+
+int defineEmptyBlock() {
+
+    for (int i = 0; i < 10; i++) {
+        if (states[i].startBlock == '\0') {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void saveCurrentState(int firstBlock, int secondBlock, int amountOfColumn, int amountOfLine) {
     
-    states[pos].cursorPosition = cursorPos;
-
-
     copyBlockIntoNewSection(states[firstBlock].startBlock, states[secondBlock].startBlock, amountOfColumn, amountOfLine);
 
-    
 }
 
 

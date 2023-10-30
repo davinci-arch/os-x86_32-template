@@ -1,5 +1,6 @@
 #include "fileHandler.h"
 #include "../stringUtils/stringHandler.h"
+#include "../states/stateUtil.h"
 
 #define START_BLOCK_FILES 0xbaee0
 #define START_BLOCK_FILENAME 0xb9f40
@@ -16,14 +17,15 @@ void createNewFile(char *currentAddress, int lengthSignLine) {
         // printErrorFile();
 
     } else {
-        char *startFileName = defineStartFileName(currentAddress, lengthSignLine);
 
-       
+        char *startFileName = defineStartFileName(currentAddress, lengthSignLine);
 
         setAddressForNewFile(startFileName);
 
-        amountOfCreatedFiles++;    
         
+        changeStartBlock((amountOfCreatedFiles + 1), (START_BLOCK_FILES + (160 * (25 * amountOfCreatedFiles))));
+        amountOfCreatedFiles++;
+
         
     }
     
@@ -35,6 +37,7 @@ void setAddressForNewFile(char *startFileName) {
 
         if (files[i].fileNameAddress == '\0') {
             files[i].fileNameAddress = defineEmptyAddressForFile();
+            files[i].startBlock = START_BLOCK_FILES + (160 * amountOfCreatedFiles);
             setNameIntoAddress(startFileName, files[i].fileNameAddress);
             break;
         }
@@ -73,17 +76,55 @@ char *defineEmptyAddressForFile() {
 }
 
 void setNameIntoAddress(char *startFileName, char *startBufferFilename) {
-
-    for(int i = 0; i < 80; i++) {
-        *startBufferFilename = *startFileName;
-        *(startBufferFilename + 1) = *(startFileName + 1);
-
-        startBufferFilename += 2;
-        startFileName += 2;
         
-    }
+        while (*startFileName != ' ') {
+            *startBufferFilename = *startFileName;
+            *(startBufferFilename + 1) = *(startFileName + 1);
+
+            startBufferFilename += 2;
+            startFileName += 2;
+        }
+        
+        
+    
 }
 
+int fileIsExist(char *filename) { // get index file block
+    
+
+    int t = -1;
+
+    char *tempAddr = filename;
+
+    for (int i = 0; i < amountOfCreatedFiles; i++) {
+
+        char *file = files[i].fileNameAddress;
+      
+        
+        for (int j = 0; j < 80; j++) {
+            
+            if (*tempAddr == *file) {
+                file += 2;
+                tempAddr += 2;
+                
+                t = i;
+            } else {
+                t = -1;
+                
+                break;
+            }
+        }
+
+        if (t >= 0) {
+            return t;
+        } else {
+            tempAddr = filename;
+        }
+
+    }
+    return t;
+    
+}
 
 char *printAllFiles(char *currentAddress) {
 

@@ -9,9 +9,11 @@ void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock, int 
     for (int i = 0; i < amountOfLine; i++) {
         
         for (int j = 0; j < amountOfColumn; j++) {
+            char tempChar = *secondBlock;
+
             *secondBlock = *firstBlock;
             *(secondBlock + 1) = *(firstBlock + 1);
-            *firstBlock = ' ';
+            *firstBlock = tempChar;
             
             firstBlock += 2;
             secondBlock += 2;

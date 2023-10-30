@@ -4,12 +4,15 @@
 struct TerminalState{
 
     char *startBlock;
+    char *currentAddress;
     int cursorPosition;
     
-}states [5];
+}states [11];
 
-void fillTerminalState(char *startAddress, int cursorPos, int pos);
-void initMainTerminalStateBlock(char *mainBlock, char *bufferMainBlock);
-void saveCurrentState(int firstBlock, int secondblock, int cursorPos, int amountOfColumn, int amountOfLine, int pos);
 
+void addNewStateBlock(char *startBlock, int cursorPos);
+void changeCursor(int pos, int newCursorPos);
+void changeStartBlock(int pos, char *newStartBlock);
+void saveCurrentState(int firstBlock, int secondblock, int amountOfColumn, int amountOfLine);
+void changeCurrentAddress(int pos, char *currAdress);
 #endif
