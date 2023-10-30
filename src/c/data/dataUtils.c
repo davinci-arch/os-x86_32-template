@@ -181,6 +181,9 @@ void executeCommand() {
 void saveChanges() {
     saveChangeFile(cursorPosition);
     
+    if (currentLine <= amountOfLine) {
+        overflowView();
+    }
 }
 
 void overflowView() {
