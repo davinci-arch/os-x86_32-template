@@ -236,9 +236,29 @@ void changeValueCursorPosition(int value) {
 }
 
 char *getAddress() {
-    return currAdress;
+    return currentAddress;
 }
 
 int getCursorPosition() {
     return cursorPosition;
+}
+
+int getAmountOfColumnt() {
+    return amountOfColumn;
+}
+
+int getAmountOfLine() {
+    return amountOfLine;
+}
+
+int getLengthLineSign() {
+    return lengthSignLine;
+}
+
+char *getLineSign() {
+    return lineSign;
+} 
+
+char *getBaseAddress() {
+    return START_ADDRESS;
 }
