@@ -234,3 +234,11 @@ void changeAddress(char *newAdr) {
 void changeValueCursorPosition(int value) {
     cursorPosition = value;
 }
+
+char *getAddress() {
+    return currAdress;
+}
+
+int getCursorPosition() {
+    return cursorPosition;
+}
