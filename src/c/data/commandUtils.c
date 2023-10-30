@@ -70,21 +70,23 @@ char *helpCommand(char *currentAddress) {
     return currentAddress;
 }
 
-char *getMessage(char *currentAddress, char *msg, char *color) {
+char *getMessage(char *msg, char *color) {
 
-    currentAddress += getAmountOfColumn() * 2;
+    int cursor = getCurrentLine();
+    
+    char *address = getBaseAddress() + ((getAmountOfColumn() * 2) * cursor) + (getAmountOfColumn() * 2);
 
     char *message = msg;
 
     while (*message != '\0') {
         
-        *currentAddress = *message;
-        *(currentAddress + 1) = color;
+        *address = *message;
+        *(address + 1) = color;
         message++;
-        currentAddress += 2;
+        address += 2;
     }
 
-    return currentAddress;
+    return address;
 
 }
 

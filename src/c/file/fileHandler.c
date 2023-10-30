@@ -26,6 +26,7 @@ void createNewFile(char *currentAddress) {
         
         changeStartBlock((amountOfCreatedFiles + 1), (START_BLOCK_FILES + (160 * (25 * amountOfCreatedFiles))));
         amountOfCreatedFiles++;
+        setCurrentAddress(getMessage("File was created!", 0x2));
 
         
     }

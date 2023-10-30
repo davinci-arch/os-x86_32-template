@@ -127,38 +127,15 @@ void executeCommand() {
 
             createFile(adr);
             moveNextLine();
-            //create file
-
-            // saveCurrentState(0, 1, cursorPosition, amountOfColumn, amountOfLine, 0);
-            // printSignLine(START_ADDRESS, lineSign);
-            // resetParam();
-
             break;
 
         case 3:
             // delete file
-            // saveCurrentState(1, 0, cursorPosition, amountOfColumn, amountOfLine, 1);
-            
-
-        //    int saveValue = states[0].cursorPosition;
-
-        //     currentLine = saveValue / amountOfColumn;   // move to previous current position;
-
-        //     int positionOnLine = (saveValue % amountOfColumn) * 2;
-
-        //     currentAddress = START_ADDRESS + (amountOfColumn * 2) * currentLine + positionOnLine;
-
-        //     cursorPosition = saveValue;
-        //     put_cursor(saveValue);
-        //     moveNextLine();
             
             break;
         case 4:
 
-            // const int fileNumber = fileIsExist(defineStartFileName(adr, lengthSignLine));
-
             editFile(adr);
-            
             break;
 
         case 5:
@@ -167,7 +144,7 @@ void executeCommand() {
             moveNextLine();
             break;
         default:
-            currentAddress = getMessage(adr, "Bad command!", 0x4);
+            currentAddress = getMessage("Bad command!", 0x4);
             moveNextLine();
             break;
     }
@@ -263,4 +240,8 @@ char *getLineSign() {
 
 char *getBaseAddress() {
     return START_ADDRESS;
+}
+
+int getCurrentLine() {
+    return currentLine;
 }
