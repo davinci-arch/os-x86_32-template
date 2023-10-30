@@ -10,11 +10,12 @@ void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock) {
         
         for (int j = 0; j < getAmountOfColumn(); j++) {
             char tempChar = *secondBlock;
+            char tempStyle = *(secondBlock + 1);
 
             *secondBlock = *firstBlock;
             *(secondBlock + 1) = *(firstBlock + 1);
             *firstBlock = tempChar;
-            
+            *(firstBlock + 1) = tempStyle;
             firstBlock += 2;
             secondBlock += 2;
         }

@@ -96,10 +96,9 @@ void moveNextLine() {
 void resetParam() {
 
 	cursorPosition = lengthSignLine / 2;
-	currentAddress = START_ADDRESS;
+	currentAddress = START_ADDRESS + lengthSignLine;
     currentLine = 0;
 	put_cursor(cursorPosition);
-	currentAddress += lengthSignLine;
 }
 
 void executeCommand() {
@@ -158,7 +157,7 @@ void executeCommand() {
 
             // const int fileNumber = fileIsExist(defineStartFileName(adr, lengthSignLine));
 
-            editFile(adr, cursorPosition);
+            editFile(adr);
             
             break;
 
@@ -227,11 +226,11 @@ void moveAllLineUp() {
 
 }
 
-void changeAddress(char *newAdr) {
+void setCurrentAddress(char *newAdr) {
     currentAddress = newAdr;
 }
 
-void changeValueCursorPosition(int value) {
+void setCursorPositoin(int value) {
     cursorPosition = value;
 }
 

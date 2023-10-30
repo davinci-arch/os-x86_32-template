@@ -99,18 +99,58 @@ char *ls(char *currentAddress) {
     return printAllFiles(currentAddress);
 }
 
-void editFile(char *currentAddress, int currentCursorPosition) {
+void editFile(char *currentAddress) {
 
- 
+    char *filename = defineStartFileName(currentAddress);
+
+    int positionMainWindowBlock = 0;
+    int activeFileIndex;
+
+    changeCurrentAddress(positionMainWindowBlock, currentAddress);
+    
+    int positionFile = fileIsExist(filename);
+
+    char *adr = 0xb8000;
+
+    fileOn.isEdit = 1;
+    fileOn.index = positionFile;
+    activeFileIndex = fileOn.index;
+
+    saveCurrentState(positionMainWindowBlock, activeFileIndex + 1);
+    put_cursor(states[activeFileIndex + 1].cursorPosition);
+
+    updateTerminal(activeFileIndex);
+
 
 }
 
 void saveChangeFile(int currentCursorPosition) {
 
+    int positionMainWindowBlock = 0;
+    int activeFileIndex = fileOn.index;
+
+    changeCurrentAddress(activeFileIndex + 1, getAddress());
+    changeCursor(activeFileIndex + 1, getCursorPosition());
     
- 
-    
+    saveCurrentState(activeFileIndex + 1, positionMainWindowBlock);
+
+    updateTerminal(positionMainWindowBlock - 1);
+    moveNextLine();
+    fileOn.isEdit = 0;
+    fileOn.index = -1;
 
 }
 
 
+void updateTerminal(int index) {
+
+    if (states[index + 1].currentAddress == '\0') {
+        states[index + 1].currentAddress = getBaseAddress();
+    }
+    
+    setCurrentAddress(states[index + 1].currentAddress);
+    setCursorPositoin(states[index + 1].cursorPosition);
+    put_cursor(states[index + 1].cursorPosition);
+
+    
+}

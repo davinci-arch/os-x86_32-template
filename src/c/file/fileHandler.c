@@ -90,7 +90,7 @@ void setNameIntoAddress(char *startFileName, char *startBufferFilename) {
     
 }
 
-int fileIsExist(char *filename) { // get index file block
+int fileIsExist(char *filename) { // get index file block if files doesn't exist it return -1
     
 
     int t = -1;

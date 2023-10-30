@@ -101,7 +101,6 @@ void key_handler(struct keyboard_event event) {
             }
             else {
                 saveChanges();
-                moveNextLine();
             }
         } else {
             writeCharacter(event.key_character);

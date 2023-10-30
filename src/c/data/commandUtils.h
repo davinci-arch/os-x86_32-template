@@ -13,7 +13,7 @@ struct Command {
 void fillCommandStrucutre();
 void clearTerminal(char *startAddress);
 void printSignLine(char *startAddress);
-void editFile(char *currentAddress, int currentCursorPosition);
+void editFile(char *currentAddress);
 void saveChangeFile(int currentCursorPosition);
 
 char *helpCommand(char *currentAddress);

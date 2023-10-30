@@ -38,7 +38,9 @@ int defineEmptyBlock() {
 
 void saveCurrentState(int firstBlock, int secondBlock) {
     
-    copyBlockIntoNewSection(states[firstBlock].startBlock, states[secondBlock].startBlock);
+    if (states[firstBlock].startBlock != '\0' && states[secondBlock].startBlock != '\0') {
+        copyBlockIntoNewSection(states[firstBlock].startBlock, states[secondBlock].startBlock);
+    }
 
 }
 
