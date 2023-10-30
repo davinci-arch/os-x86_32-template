@@ -17,6 +17,8 @@ void saveCurrentState();
 void saveChanges();
 void changeValueCursorPosition(int value);
 void changeAddress(char *newAdr);
+char *getAddress();
+int getCursorPosition();
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
  * the first line 20th column, position = 80 will place in the first column of the second line.
