@@ -1,9 +1,9 @@
 #include "stringHandler.h"
 #include "../data/commandUtils.h";
 
-int defineCommand(char *currentAddress, int lengthSignLine) {
+int defineCommand(char *currentAddress) {
 
-    currentAddress += lengthSignLine;
+    currentAddress += getLengthLineSign();
 
     char *startCommand = defineStartCommand(currentAddress);
 
@@ -47,9 +47,9 @@ char *defineStartCommand(char *currentAddress) {
 
 }
 
-char *defineStartFileName(char *currentAddress, int lengthSignLine) {
+char *defineStartFileName(char *currentAddress) {
 
-    currentAddress += lengthSignLine;
+    currentAddress += getLengthLineSign();
 
     char *fileName = defineStartCommand(currentAddress);
 

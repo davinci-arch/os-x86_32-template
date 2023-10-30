@@ -1,10 +1,10 @@
 #ifndef STRINGUTILS_H
 #define STRINGUTILS_H
 
-int defineCommand(char *currentAddress, int lengthSignLine);
+int defineCommand(char *currentAddress);
 
 char *defineStartCommand(char *currentAddress);
-char *defineStartFileName(char *currentAddress, int lengthSignLine);
+char *defineStartFileName(char *currentAddress);
 char *skipWord(char *address);
 
 #endif

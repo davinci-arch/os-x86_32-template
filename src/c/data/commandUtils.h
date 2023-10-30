@@ -11,13 +11,13 @@ struct Command {
 } commands[6];
 
 void fillCommandStrucutre();
-void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine);
-void printSignLine(char *startAddress, char *lineSign);
-void editFile(char *currentAddress, int lengthSignLine, int currentCursorPosition, int amountOfColumn, int amountOfLine, char *baseAddress);
-void saveChangeFile(int currentCursorPosition, int amountOfColumn, int amountOfLine);
+void clearTerminal(char *startAddress);
+void printSignLine(char *startAddress);
+void editFile(char *currentAddress, int currentCursorPosition);
+void saveChangeFile(int currentCursorPosition);
 
-char *helpCommand(char *currentAddress, int amountOfColumn);
-char *getWrongMessage(char *currentAddress, int amountOfColumn);
-void createFile(char *currentAddress, int lengthSignLine);
+char *helpCommand(char *currentAddress);
+char *getWrongMessage(char *currentAddress);
+void createFile(char *currentAddress);
 char *ls(char *currentAddress);
 #endif;

@@ -2,8 +2,8 @@
 #define COPYBLOCK_H
 
 
-void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock, int amountOfColumn, int amountOfLine);
+void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock);
 
-void clearBlock(char *startAddress, int amountOfLine);
+void clearBlock(char *startAddress);
 
 #endif

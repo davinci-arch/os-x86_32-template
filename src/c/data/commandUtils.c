@@ -19,13 +19,13 @@ void fillCommandStrucutre() {
 
 
 
-void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine) {
+void clearTerminal(char *startAddress) {
     char clearSymbol = ' ';
 
 	char *frameBuffer = (char *) startAddress;
 	
 	int count = 0;
-	while (count <= (amountOfColumn * amountOfLine)) {
+	while (count <= (getAmountOfColumn() * getAmountOfLine())) {
 
 		*frameBuffer = clearSymbol;
         *(frameBuffer + 1) = 0x7;
@@ -34,8 +34,8 @@ void clearTerminal(char *startAddress, int amountOfColumn, int amountOfLine) {
 	}
 }
 
-void printSignLine(char *startAddress, char *lineSign) {
-    char *sign = lineSign;
+void printSignLine(char *startAddress) {
+    char *sign = getLineSign();
 
 	while (*sign != '\0') {
 		
@@ -46,9 +46,11 @@ void printSignLine(char *startAddress, char *lineSign) {
 	}
 }
 
-char *helpCommand(char *currentAddress, int amountOfColumn) {
+char *helpCommand(char *currentAddress) {
 
     char *saveAdr = currentAddress;
+    int amountOfColumn = getAmountOfColumn();
+
     for (int i = 0; i < 7; i++) {
 
         currentAddress += amountOfColumn * 2;
@@ -68,9 +70,9 @@ char *helpCommand(char *currentAddress, int amountOfColumn) {
     return currentAddress;
 }
 
-char *getWrongMessage(char *currentAddress, int amountOfColumn) {
+char *getWrongMessage(char *currentAddress) {
 
-    currentAddress += amountOfColumn * 2;
+    currentAddress += getAmountOfColumn() * 2;
 
     char *message = "You wrote wrong command!";
 
@@ -87,9 +89,9 @@ char *getWrongMessage(char *currentAddress, int amountOfColumn) {
 }
 
 
-void createFile(char *currentAddress, int lengthSignLine) {
+void createFile(char *currentAddress) {
 
-    createNewFile(currentAddress, lengthSignLine);
+    createNewFile(currentAddress);
     
 }
 
@@ -97,13 +99,13 @@ char *ls(char *currentAddress) {
     return printAllFiles(currentAddress);
 }
 
-void editFile(char *currentAddress, int lengthSignLine, int currentCursorPosition, int amountOfColumn, int amountOfLine, char *baseAddress) {
+void editFile(char *currentAddress, int currentCursorPosition) {
 
  
 
 }
 
-void saveChangeFile(int currentCursorPosition, int amountOfColumn, int amountOfLine) {
+void saveChangeFile(int currentCursorPosition) {
 
     
  

@@ -19,7 +19,7 @@ void changeValueCursorPosition(int value);
 void changeAddress(char *newAdr);
 char *getAddress();
 int getCursorPosition();
-int getAmountOfColumnt();
+int getAmountOfColumn();
 int getAmountOfLine();
 int getLengthLineSign();
 char *getLineSign();

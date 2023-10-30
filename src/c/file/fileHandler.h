@@ -17,7 +17,7 @@ struct FileAction {
     
 } fileOn;
 
-void createNewFile(char *currentAddress, int lengthSignLine);
+void createNewFile(char *currentAddress);
 char *defineEmptyAddressForFile();
 void setAddressForNewFile(char *startFileName);
 void setNameIntoAddress(char *startFileName, char *startBufferFilename);

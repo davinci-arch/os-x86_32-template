@@ -1,6 +1,7 @@
 #include "fileHandler.h"
 #include "../stringUtils/stringHandler.h"
 #include "../states/stateUtil.h"
+#include "../data/dataUtils.h"
 
 #define START_BLOCK_FILES 0xbaee0
 #define START_BLOCK_FILENAME 0xb9f40
@@ -9,7 +10,7 @@ const int maxAmountOfFiles = 10;
 
 int amountOfCreatedFiles = 0;
 
-void createNewFile(char *currentAddress, int lengthSignLine) {
+void createNewFile(char *currentAddress) {
 
 
     if (amountOfCreatedFiles == maxAmountOfFiles) {
@@ -18,7 +19,7 @@ void createNewFile(char *currentAddress, int lengthSignLine) {
 
     } else {
 
-        char *startFileName = defineStartFileName(currentAddress, lengthSignLine);
+        char *startFileName = defineStartFileName(currentAddress);
 
         setAddressForNewFile(startFileName);
 

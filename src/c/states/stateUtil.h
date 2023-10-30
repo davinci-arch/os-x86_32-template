@@ -13,6 +13,6 @@ struct TerminalState{
 void addNewStateBlock(char *startBlock, int cursorPos);
 void changeCursor(int pos, int newCursorPos);
 void changeStartBlock(int pos, char *newStartBlock);
-void saveCurrentState(int firstBlock, int secondblock, int amountOfColumn, int amountOfLine);
+void saveCurrentState(int firstBlock, int secondblock);
 void changeCurrentAddress(int pos, char *currAdress);
 #endif

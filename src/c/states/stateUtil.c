@@ -36,9 +36,9 @@ int defineEmptyBlock() {
     return -1;
 }
 
-void saveCurrentState(int firstBlock, int secondBlock, int amountOfColumn, int amountOfLine) {
+void saveCurrentState(int firstBlock, int secondBlock) {
     
-    copyBlockIntoNewSection(states[firstBlock].startBlock, states[secondBlock].startBlock, amountOfColumn, amountOfLine);
+    copyBlockIntoNewSection(states[firstBlock].startBlock, states[secondBlock].startBlock);
 
 }
 

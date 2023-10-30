@@ -29,8 +29,8 @@ void init_base_configuration() {
 
     changeStartBlock(0, START_ADDRESS);
     fillCommandStrucutre();
-    clearTerminal(START_ADDRESS, amountOfColumn, amountOfLine);
-    printSignLine(START_ADDRESS, lineSign);
+    clearTerminal(START_ADDRESS);
+    printSignLine(START_ADDRESS);
     resetParam();
 }
 
@@ -109,24 +109,24 @@ void executeCommand() {
     char *adr = START_ADDRESS + (amountOfColumn * 2 * (currentLine - 1));
 
     
-    int numberCommand = defineCommand(adr, lengthSignLine);
+    int numberCommand = defineCommand(adr);
 
     switch (numberCommand) {
 
         case 0:
-            currentAddress = helpCommand(adr, amountOfColumn);
+            currentAddress = helpCommand(adr);
             moveNextLine();
             break;
 
         case 1:
 
-            clearTerminal(START_ADDRESS, amountOfColumn, amountOfLine);
-            printSignLine(START_ADDRESS, lineSign);
+            clearTerminal(START_ADDRESS);
+            printSignLine(START_ADDRESS);
             resetParam();
             break;
         case 2:
 
-            createFile(adr, lengthSignLine);
+            createFile(adr);
             moveNextLine();
             //create file
 
@@ -158,7 +158,7 @@ void executeCommand() {
 
             // const int fileNumber = fileIsExist(defineStartFileName(adr, lengthSignLine));
 
-            editFile(adr, lengthSignLine, cursorPosition, amountOfColumn, amountOfLine, START_ADDRESS);
+            editFile(adr, cursorPosition);
             
             break;
 
@@ -168,7 +168,7 @@ void executeCommand() {
             moveNextLine();
             break;
         default:
-            currentAddress = getWrongMessage(adr, amountOfColumn);
+            currentAddress = getWrongMessage(adr);
             moveNextLine();
             break;
     }
@@ -180,7 +180,7 @@ void executeCommand() {
 
 
 void saveChanges() {
-    saveChangeFile(cursorPosition, amountOfColumn, amountOfLine);
+    saveChangeFile(cursorPosition);
     
 }
 
@@ -243,7 +243,7 @@ int getCursorPosition() {
     return cursorPosition;
 }
 
-int getAmountOfColumnt() {
+int getAmountOfColumn() {
     return amountOfColumn;
 }
 

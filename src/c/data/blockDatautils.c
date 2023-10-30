@@ -1,14 +1,14 @@
 #include "blockDatautils.h"
+#include "../data/dataUtils.h"
 
-
-void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock, int amountOfColumn, int amountOfLine) {
+void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock) {
 
     char *firstBlock = startFirstBlock;
     char *secondBlock = startSecondBlock;
 
-    for (int i = 0; i < amountOfLine; i++) {
+    for (int i = 0; i < getAmountOfLine(); i++) {
         
-        for (int j = 0; j < amountOfColumn; j++) {
+        for (int j = 0; j < getAmountOfColumn(); j++) {
             char tempChar = *secondBlock;
 
             *secondBlock = *firstBlock;
@@ -22,11 +22,11 @@ void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock, int 
 
 }
 
-void clearBlock(char *startAddress, int amountOfLine) {
+void clearBlock(char *startAddress) {
 
     char clear = ' ';
 
-    for(int i = 0; i < amountOfLine; i++) {
+    for(int i = 0; i < getAmountOfLine(); i++) {
         *startAddress += clear;
         *(startAddress + 1) = 0x0;
         startAddress += 2;
