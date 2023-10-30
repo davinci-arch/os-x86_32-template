@@ -17,7 +17,7 @@ void editFile(char *currentAddress);
 void saveChangeFile(int currentCursorPosition);
 
 char *helpCommand(char *currentAddress);
-char *getWrongMessage(char *currentAddress);
+char *getMessage(char *currentAddress, char *msg, char *color);
 void createFile(char *currentAddress);
 char *ls(char *currentAddress);
 #endif;

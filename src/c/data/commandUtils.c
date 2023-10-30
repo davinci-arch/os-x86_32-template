@@ -70,16 +70,16 @@ char *helpCommand(char *currentAddress) {
     return currentAddress;
 }
 
-char *getWrongMessage(char *currentAddress) {
+char *getMessage(char *currentAddress, char *msg, char *color) {
 
     currentAddress += getAmountOfColumn() * 2;
 
-    char *message = "You wrote wrong command!";
+    char *message = msg;
 
     while (*message != '\0') {
         
         *currentAddress = *message;
-        *(currentAddress + 1) = 0x4;
+        *(currentAddress + 1) = color;
         message++;
         currentAddress += 2;
     }

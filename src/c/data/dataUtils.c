@@ -167,7 +167,7 @@ void executeCommand() {
             moveNextLine();
             break;
         default:
-            currentAddress = getWrongMessage(adr);
+            currentAddress = getMessage(adr, "Bad command!", 0x4);
             moveNextLine();
             break;
     }
