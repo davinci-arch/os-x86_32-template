@@ -23,4 +23,5 @@ void setAddressForNewFile(char *startFileName);
 void setNameIntoAddress(char *startFileName, char *startBufferFilename);
 char *printAllFiles(char *currentAddress);
 int fileIsExist(char *filename);
+void deleteFilename(int indexFile);
 #endif

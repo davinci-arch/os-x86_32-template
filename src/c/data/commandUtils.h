@@ -21,4 +21,5 @@ char *getMessage(char *msg, char *color);
 void createFile(char *currentAddress);
 char *ls(char *currentAddress);
 void *readFileContent(char *address);
+void deleteFile(char *address);
 #endif;

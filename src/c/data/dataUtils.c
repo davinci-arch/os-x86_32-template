@@ -130,8 +130,8 @@ void executeCommand() {
             break;
 
         case 3:
-            // delete file
-            
+            deleteFile(adr);
+            moveNextLine();
             break;
         case 4:
 

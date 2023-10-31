@@ -28,9 +28,11 @@ void clearBlock(char *startAddress) {
     char clear = ' ';
 
     for(int i = 0; i < getAmountOfLine(); i++) {
-        *startAddress += clear;
-        *(startAddress + 1) = 0x0;
-        startAddress += 2;
+        for (int j = 0; j < getAmountOfColumn(); j++) {
+            *startAddress = clear;
+            startAddress += 2;
+
+        }
     }
 }
 

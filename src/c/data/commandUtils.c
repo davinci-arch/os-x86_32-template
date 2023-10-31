@@ -3,6 +3,7 @@
 #include "../file/fileHandler.h"
 #include "../states/stateUtil.h";
 #include "../stringUtils/stringHandler.h"
+#include "blockDatautils.h"
 
 void fillCommandStrucutre() {
 
@@ -106,7 +107,7 @@ void editFile(char *currentAddress) {
     char *filename = defineStartFileName(currentAddress);
 
     int positionMainWindowBlock = 0;
-    int activeFileIndex;
+    
 
     changeCurrentAddress(positionMainWindowBlock, currentAddress);
     
@@ -116,12 +117,11 @@ void editFile(char *currentAddress) {
 
     fileOn.isEdit = 1;
     fileOn.index = positionFile;
-    activeFileIndex = fileOn.index;
 
-    saveCurrentState(positionMainWindowBlock, activeFileIndex + 1);
-    put_cursor(states[activeFileIndex + 1].cursorPosition);
+    saveCurrentState(positionMainWindowBlock, positionFile + 1);
+    put_cursor(states[positionFile + 1].cursorPosition);
 
-    updateTerminal(activeFileIndex);
+    updateTerminal(positionFile);
 
 
 }
@@ -186,6 +186,22 @@ void *readFileContent(char *address) {
 
     } else {
         //file dose not exist
+    }
+
+}
+
+void deleteFile(char *address) {
+
+    char *filename = defineStartFileName(address);
+
+    int indexFile = fileIsExist(filename);
+
+    if (indexFile >= 0) {
+
+        deleteFilename(indexFile);
+
+    } else {
+        // file dose not exist
     }
 
 }

@@ -37,8 +37,6 @@ _Noreturn void halt_loop() {
 
 char *frameBuffer = (char *) 0xb8004;
 
-
-
 void key_handler(struct keyboard_event event) {
     
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
@@ -90,7 +88,6 @@ void key_handler(struct keyboard_event event) {
             // char *adr = FIRSTADDRESS + ((80 * 2) * (currentLine-1));
             // adr += (cursorPosition - (80 * currentLine)) * 2;
 
-
         if (event.key == KEY_BACKSPACE) {
             removeCharacter();
         
@@ -105,17 +102,7 @@ void key_handler(struct keyboard_event event) {
         } else {
             writeCharacter(event.key_character);
         }
-
-        // *frameBuffer = event.key_character;
-        // frameBuffer += 2;
-
-        // if (event.key == KEY_ENTER) {
-
-        //     char *adr = defineAddresLastWord(0xb8004);   
-        //     adr += 160;
-        //     *adr = 't';
-        //     *(adr + 1) = 0x4 << 4;
-        // }        
+          
         
 
    }
