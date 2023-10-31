@@ -75,4 +75,29 @@ char *skipWord(char *address) {
     
 }
 
+char *defineAddresLastWord(char *address) {
+    
+    int isLast = 0;
+    char *adrLastWord;
+    for (int i = 0; i < getAmountOfLine(); i++) {
+
+        for (int j = 0; j < getAmountOfColumn(); j++) {
+
+            if (*address != ' ' && *address != '\n') {
+                adrLastWord = address;
+            }
+            address += 2;
+        }
+        
+    }
+
+    if (adrLastWord != '\0') {
+
+        return adrLastWord;
+
+    } else {
+        return '\0';
+    }
+}
+
 

@@ -20,4 +20,5 @@ char *helpCommand(char *currentAddress);
 char *getMessage(char *msg, char *color);
 void createFile(char *currentAddress);
 char *ls(char *currentAddress);
+void *readFileContent(char *address);
 #endif;

@@ -156,3 +156,36 @@ void updateTerminal(int index) {
 
     
 }
+
+void *readFileContent(char *address) {
+
+    char *filename = defineStartFileName(address);
+
+    int index = fileIsExist(filename);
+
+    if (index >= 0) {
+        
+        // char *lastWordAddress = defineAddresLastWord(states[index + 1].startBlock);
+        int cursorPos = states[index + 1].cursorPosition;
+
+        address += getAmountOfColumn() * 2;
+
+        char *adrBlock = states[index + 1].startBlock;
+
+        if (cursorPos > 0) {
+
+            for (int i = 0; i < cursorPos; i++) {
+                *address = *adrBlock;
+                *(address + 1) = *(adrBlock + 1);
+                address += 2;
+                adrBlock += 2;
+            }
+
+            setCurrentAddress(address);
+        }
+
+    } else {
+        //file dose not exist
+    }
+
+}

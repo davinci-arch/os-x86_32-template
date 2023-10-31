@@ -106,7 +106,16 @@ void key_handler(struct keyboard_event event) {
             writeCharacter(event.key_character);
         }
 
-        
+        // *frameBuffer = event.key_character;
+        // frameBuffer += 2;
+
+        // if (event.key == KEY_ENTER) {
+
+        //     char *adr = defineAddresLastWord(0xb8004);   
+        //     adr += 160;
+        //     *adr = 't';
+        //     *(adr + 1) = 0x4 << 4;
+        // }        
         
 
    }

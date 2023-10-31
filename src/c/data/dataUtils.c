@@ -143,6 +143,10 @@ void executeCommand() {
             currentAddress = ls(adr);
             moveNextLine();
             break;
+        case 6:
+            readFileContent(adr);
+            moveNextLine();
+            break;
         default:
             currentAddress = getMessage("Bad command!", 0x4);
             moveNextLine();
