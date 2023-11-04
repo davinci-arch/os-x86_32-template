@@ -50,7 +50,10 @@ void removeCharacter() {
 
 
 	char *startAdr = START_ADDRESS + ((amountOfColumn * 2) * currentLine) + lengthSignLine;
-    
+
+    if (fileOn.isEdit == 1) {
+        startAdr = START_ADDRESS;
+    } 
 
 	if (currentAddress != startAdr) {
 		currentAddress -= 2;
@@ -62,8 +65,12 @@ void removeCharacter() {
 
 void writeCharacter(char letter) {
 
-	char *bound = START_ADDRESS + ((amountOfColumn * 2) * amountOfLine) - 2; // max length (80 * 2) * 25
+	char *bound = START_ADDRESS + ((amountOfColumn * 2) * (currentLine + 1)) - 2;
     
+    if (fileOn.isEdit == 1) {
+        bound = START_ADDRESS + ((amountOfColumn * 2)) * amountOfLine - 2;
+    }
+
     if (currentAddress < bound) {
         *currentAddress = letter;
         currentAddress += 2;
@@ -91,6 +98,21 @@ void moveNextLine() {
 
 	cursorPosition = amountOfColumn * currentLine + lengthSignLine / 2;
 	put_cursor(cursorPosition);
+}
+
+void moveNextLineWithoutSign() {
+
+    char *bound = (START_ADDRESS + ((amountOfColumn * 2) * amountOfLine) - 2) - 160;
+
+    if (currentAddress < bound) {
+
+        currentLine = defineCurrentLine();
+        cursorPosition = amountOfColumn * currentLine;
+
+        currentAddress = START_ADDRESS + ((amountOfColumn * 2) * currentLine);
+        put_cursor(cursorPosition);
+
+    } 
 }
 
 void resetParam() {
@@ -139,8 +161,8 @@ void executeCommand() {
             break;
 
         case 5:
-            //display all createad files
-            currentAddress = ls(adr);
+
+            setCurrentAddress(ls(adr));
             moveNextLine();
             break;
         case 6:
@@ -148,7 +170,7 @@ void executeCommand() {
             moveNextLine();
             break;
         default:
-            currentAddress = getMessage("Bad command!", 0x4);
+            setCurrentAddress(getMessage("Bad command!", 0x4));
             moveNextLine();
             break;
     }

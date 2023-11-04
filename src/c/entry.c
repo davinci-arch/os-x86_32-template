@@ -39,66 +39,22 @@ void key_handler(struct keyboard_event event) {
     
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
         
-
-        // saveNameFile :
-
-
-        // *frameBuffer = event.key_character;
-        // frameBuffer += 2;
-
-        // files[0].fileNameAddress = FIRSTADDRESS + (80 * 25);
-
-        // if (event.key == KEY_ENTER) {
-        //     char *findFilename = FIRSTADDRESS;
-        //     findFilename += 2;
-            
-        //     while (*findFilename == ' ') {
-        //         findFilename += 2;
-        //     }
-
-            
-        //     char *filePos = files[0].fileNameAddress;
-
-        //     while (*findFilename != ' ') {
-        //         *filePos = *findFilename;
-        //         findFilename += 2;
-        //         filePos += 2;
-                
-        //     }
-           
-
-
-        
-        //     frameBuffer = FIRSTADDRESS + (80 * 2);
-
-        //     char *secondFilePos = files[0].fileNameAddress;
-
-        //     while (*secondFilePos != '\0') {
-        //         *frameBuffer = *secondFilePos;
-        //         frameBuffer += 2;
-        //         secondFilePos += 2;
-        //     }
-
-        // }
-
- // int currentLine = cursorPosition / 80;
-
-            // char *adr = FIRSTADDRESS + ((80 * 2) * (currentLine-1));
-            // adr += (cursorPosition - (80 * currentLine)) * 2;
-
         if (event.key == KEY_BACKSPACE) {
             removeCharacter();
         
         } else if (event.key == KEY_ENTER)  {
 
-            if (fileOn.isEdit == 0) {
+            if (fileOn.isEdit == -1 || fileOn.isEdit == 0) {
                 executeCommand();
+            } else {
+                moveNextLineWithoutSign();
             }
-            else {
-                saveChanges();
-            }
+        } else if (event.key == KEY_TAB) {
+            saveChanges(); //save changes in file
+            
         } else {
             writeCharacter(event.key_character);
+
         }
         
         

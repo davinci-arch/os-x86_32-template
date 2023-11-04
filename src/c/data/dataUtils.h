@@ -25,6 +25,7 @@ int getLengthLineSign();
 char *getLineSign();
 char *getBaseAddress();
 int getCurrentLine();
+void moveNextLineWithoutSign();
 /**
  * Puts cursors in a given position. For example, position = 20 would place it in
  * the first line 20th column, position = 80 will place in the first column of the second line.

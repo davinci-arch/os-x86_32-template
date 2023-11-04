@@ -15,6 +15,7 @@ void copyBlockIntoNewSection(char *startFirstBlock, char *startSecondBlock) {
             *secondBlock = *firstBlock;
             *(secondBlock + 1) = *(firstBlock + 1);
             *firstBlock = tempChar;
+            *(firstBlock + 1) = tempStyle;
             firstBlock += 2;
             secondBlock += 2;
         }

@@ -4,10 +4,10 @@
 #include "../data/dataUtils.h"
 #include "../data/blockDatautils.h"
 
-#define START_BLOCK_FILES 0xcf700
+#define START_BLOCK_FILES 0xbaee0 
 #define START_BLOCK_FILENAME 0xb9f40
 
-const int maxAmountOfFiles = 10;
+const int maxAmountOfFiles = 5;
 
 int amountOfCreatedFiles = 0;
 
@@ -16,22 +16,52 @@ void createNewFile(char *currentAddress) {
 
     if (amountOfCreatedFiles == maxAmountOfFiles) {
 
-        // printErrorFile();
+        setCurrentAddress(getMessage("Max files was created!", 0xe));
 
     } else {
 
         char *startFileName = defineStartFileName(currentAddress);
 
-        setAddressForNewFile(startFileName);
+        if (isFilenameCorrect(startFileName) == 1) {
 
+            if (fileIsExist(startFileName) == -1) {
+
+                setAddressForNewFile(startFileName);
+            
+                changeStartBlock((amountOfCreatedFiles + 1), (START_BLOCK_FILES + (160 * (25 * amountOfCreatedFiles))));
+                amountOfCreatedFiles++;
+
+                setCurrentAddress(getMessage("File was created!", 0x2));
+
+            } else {
+                setCurrentAddress(getMessage("File is exist!", 0x4));
+            }
+        } else {
+            setCurrentAddress(getMessage("Filename is bad!", 0x4));
+        }
         
-        changeStartBlock((amountOfCreatedFiles + 1), (START_BLOCK_FILES + (160 * (25 * amountOfCreatedFiles))));
-        amountOfCreatedFiles++;
-        setCurrentAddress(getMessage("File was created!", 0x2));
+        
 
         
     }
     
+}
+
+int isFilenameCorrect(char *filename) {
+
+    char *boundLine = getBaseAddress() + ((getAmountOfColumn() * 2) * (getCurrentLine() + 1)) - 2;
+
+    
+
+    if (filename > boundLine) {
+        return 0;
+        
+    } else {
+        return 1;
+    }
+
+    
+
 }
 
 void setAddressForNewFile(char *startFileName) {

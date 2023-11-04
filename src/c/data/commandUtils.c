@@ -105,24 +105,29 @@ char *ls(char *currentAddress) {
 void editFile(char *currentAddress) {
 
     char *filename = defineStartFileName(currentAddress);
-
     int positionMainWindowBlock = 0;
-    
-
-    changeCurrentAddress(positionMainWindowBlock, currentAddress);
-    
     int positionFile = fileIsExist(filename);
 
-    char *adr = 0xb8000;
+    if (positionFile >= 0) {
 
-    fileOn.isEdit = 1;
-    fileOn.index = positionFile;
+        changeCurrentAddress(positionMainWindowBlock, currentAddress);
+    
 
-    saveCurrentState(positionMainWindowBlock, positionFile + 1);
-    put_cursor(states[positionFile + 1].cursorPosition);
+        fileOn.isEdit = 1;
+        fileOn.index = positionFile;
 
-    updateTerminal(positionFile);
+        saveCurrentState(positionMainWindowBlock, positionFile + 1);
+        put_cursor(states[positionFile + 1].cursorPosition);
 
+        updateTerminal(positionFile);
+
+    } else {
+        setCurrentAddress(getMessage("File dosen't exist!", 0x4));
+        moveNextLine();
+    }
+    
+
+    
 
 }
 
@@ -138,7 +143,7 @@ void saveChangeFile(int currentCursorPosition) {
 
     updateTerminal(positionMainWindowBlock - 1);
     moveNextLine();
-    fileOn.isEdit = 0;
+    fileOn.isEdit = -1;
     fileOn.index = -1;
 
 }
@@ -165,7 +170,6 @@ void *readFileContent(char *address) {
 
     if (index >= 0) {
         
-        // char *lastWordAddress = defineAddresLastWord(states[index + 1].startBlock);
         int cursorPos = states[index + 1].cursorPosition;
 
         address += getAmountOfColumn() * 2;
@@ -185,7 +189,8 @@ void *readFileContent(char *address) {
         }
 
     } else {
-        //file dose not exist
+        setCurrentAddress(getMessage("File dosen't exist!", 0x4));
+
     }
 
 }
@@ -199,9 +204,10 @@ void deleteFile(char *address) {
     if (indexFile >= 0) {
 
         deleteFilename(indexFile);
+        setCurrentAddress(getMessage("File succsess deleted!", 0x2));
 
     } else {
-        // file dose not exist
+        setCurrentAddress(getMessage("File dosen't exist!", 0x4));
     }
 
 }
