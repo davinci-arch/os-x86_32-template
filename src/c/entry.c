@@ -8,7 +8,6 @@
 #include "file/fileHandler.h"
 #include "states/stateUtil.h"
 
-#define FIRSTADDRESS 0xb8000
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -35,7 +34,6 @@ _Noreturn void halt_loop() {
     while (1) { halt(); }
 }
 
-char *frameBuffer = (char *) 0xb8004;
 
 void key_handler(struct keyboard_event event) {
     
@@ -102,7 +100,7 @@ void key_handler(struct keyboard_event event) {
         } else {
             writeCharacter(event.key_character);
         }
-          
+        
         
 
    }

@@ -4,10 +4,10 @@
 #include "../data/dataUtils.h"
 #include "../data/blockDatautils.h"
 
-#define START_BLOCK_FILES 0xbaee0
+#define START_BLOCK_FILES 0xcf700
 #define START_BLOCK_FILENAME 0xb9f40
 
-const int maxAmountOfFiles = 5;
+const int maxAmountOfFiles = 10;
 
 int amountOfCreatedFiles = 0;
 

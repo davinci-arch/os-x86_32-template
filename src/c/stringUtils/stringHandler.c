@@ -15,7 +15,7 @@ int defineCommand(char *currentAddress) {
 
         char *currentCommand = commands[i].command;
 
-        while (*tempAddr != ' ') {
+        while (*tempAddr != ' ' || *currentCommand != '\0') {
 
             if (*tempAddr == *currentCommand) {
                 currentCommand++;
