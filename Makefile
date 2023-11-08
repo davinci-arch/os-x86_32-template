@@ -17,6 +17,7 @@ SRC_C   := \
 	src/c/data/blockDatautils.c \
 	src/c/states/stateUtil.c \
 	src/c/file/fileHandler.c \
+	src/c/screensaver/screensaver.c \
 
 
 

@@ -164,11 +164,18 @@ char *printAllFiles(char *currentAddress) {
 
     char *saveAdr = currentAddress;
     char *startFileName = START_BLOCK_FILENAME;
-
+    char *startSymbol = " -- ";
     for (int i = 0; i < amountOfCreatedFiles; i++) {
         currentAddress += 160;
         
-         while (*startFileName != ' ') {
+        while (*startSymbol != '\0') {
+            *currentAddress = *startSymbol;
+            currentAddress += 2;
+            startSymbol++;
+        }
+        startSymbol = " -- ";
+        
+        while (*startFileName != ' ') {
 
             *currentAddress = *startFileName;
 

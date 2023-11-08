@@ -7,7 +7,7 @@
 #include "stringUtils/stringHandler.h"
 #include "file/fileHandler.h"
 #include "states/stateUtil.h"
-
+#include "screensaver/screensaver.h"
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -33,39 +33,50 @@ void init_kernel() {
 _Noreturn void halt_loop() {
     while (1) { halt(); }
 }
-
-
+int active = 0;
 void key_handler(struct keyboard_event event) {
     
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
         
-        if (event.key == KEY_BACKSPACE) {
-            removeCharacter();
+        // if (event.key == KEY_BACKSPACE) {
+        //     removeCharacter();
         
-        } else if (event.key == KEY_ENTER)  {
+        // } else if (event.key == KEY_ENTER)  {
 
-            if (fileOn.isEdit == -1 || fileOn.isEdit == 0) {
-                executeCommand();
-            } else {
-                moveNextLineWithoutSign();
-            }
-        } else if (event.key == KEY_TAB) {
-            saveChanges(); //save changes in file
+        //     if (fileOn.isEdit == -1 || fileOn.isEdit == 0) {
+        //         executeCommand();
+        //     } else {
+        //         moveNextLineWithoutSign();
+        //     }
+        // } else if (event.key == KEY_TAB) {
+        //     saveChanges(); //save changes in file
             
-        } else {
-            writeCharacter(event.key_character);
+        // } else {
+        //     writeCharacter(event.key_character);
+
+        // }
+        // printSaver(0xb8000 + (160 * 10) + 78);
+        
+        if (event.key == KEY_ENTER) {
+            active = 1;
+            
+            
+        } else if (event.key == KEY_TAB) {
+            printSaver(0xb8000 + (160 * 11) + 80);
 
         }
         
-        
-
    }
 }
 
+
+
 void timer_tick_handler() {
     // do something when timer ticks
+    if (active == 1) {
+        moveLeftBottom();
+    }
 }
-
 
 /**
  * This is where the bootloader transfers control to.
