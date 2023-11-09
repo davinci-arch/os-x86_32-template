@@ -33,6 +33,7 @@ void init_kernel() {
 _Noreturn void halt_loop() {
     while (1) { halt(); }
 }
+char *frameBuffer = 0xb8000;
 int active = 0;
 void key_handler(struct keyboard_event event) {
     
@@ -58,11 +59,11 @@ void key_handler(struct keyboard_event event) {
         // printSaver(0xb8000 + (160 * 10) + 78);
         
         if (event.key == KEY_ENTER) {
-            active = 1;
-
+            run(28, 10);
+            
         } else if (event.key == KEY_TAB) {
-            printSaver(0xb8000 + (160 * 10) + 50);
-
+            // printSaver(0xb8000 + (160 * 10) + 50);
+            active = 1;
         }
         
    }
@@ -73,7 +74,8 @@ void key_handler(struct keyboard_event event) {
 void timer_tick_handler() {
     // do something when timer ticks
     if (active == 1) {
-        run();
+        moveLeft();
+        
     }
 }
 

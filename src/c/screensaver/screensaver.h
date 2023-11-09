@@ -2,13 +2,13 @@
 #define SCREENSAVER_H
 
 struct ScreenSaverPoint {
-    char *addressPoint;
     int x;
     int y;
+    int width;
+    int height;
+} point;
 
-} points[4][22];
 
-
-void printSaver(char *startAddress);
-void moveLeftBottom();
+void run();
+void moveLeft();
 #endif SCREENSAVER_H
