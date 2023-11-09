@@ -6,7 +6,7 @@ struct ScreenSaverPoint {
     int x;
     int y;
 
-} points[2][2];
+} points[4][22];
 
 
 void printSaver(char *startAddress);

@@ -1,48 +1,98 @@
 #include "screensaver.h"
 #include "../data/dataUtils.h"
 
+// xxx xxx\nx x x  \nx x xxx\nx x   x\nxxx xxx
+// x x    x     x   x x  \nx   x   x   x    x   x\nx   x    x x     x   x\nx x       x      x x  
+#define screensaverLetters "x x    x     x   x x  \nx   x   x   x    x   x\nx   x    x x     x   x\nx x       x      x x  ";
 
-#define screensaverLetters "xx\nxx";
+int collision = 0;
+int currentXCollision;
+int currentYCollistion;
 
 void run() {
 
+
+    int x = points[3][0].x;
+    int y = points[3][0].y;
+
+    int boundX = 1;
+    int boundY = 1;
+
+    
+    if (y == boundY || currentYCollistion == 1) {
+        currentYCollistion = 1;
+
+        collision = 1;
+
+        for(int i = 0; i < 22; i++) {//amount of column
+            for (int j = 0; j < 4; j++) { // amount of line
+
+                char *adr = points[j][i].addressPoint;
+                char temp = *adr;
+
+                *adr  = ' ';
+                adr -= (getAmountOfColumn() * 2) + 2;
+                *adr = temp;
+
+                points[j][i].addressPoint = adr;
+                points[j][i].x -= 1;
+                points[j][i].y += 1;
+            }
+        }
+        
+
+    } else if(x == boundX) {
+        currentYCollistion = 0;
+
+    } else if (collision == 0){
+        startVectorMove();
+    }
+
+    
+// else if (x == 1 || currentXCollision == 1) {
+        
+//         currentYCollistion = 0;
+
+//         collision = 1;
+
+//         for (int i = 21; i >= 0; i--) {//amount of columns
+//             for (int j = 0; j < 4; j++) { //amount of lines
+
+//                 char *adr = points[j][i].addressPoint;
+//                 char temp = *adr;
+
+//                 *adr  = ' ';
+//                 adr -= (getAmountOfColumn() * 2) - 2;
+//                 *adr = temp;
+
+//                 points[j][i].addressPoint = adr;
+//                 points[j][i].x += 1;
+//                 points[j][i].y += 1;
+//             }
+//         }
+//     } 
+
 }
 
-void moveLeftBottom() {
-    
- 
-    int x = points[1][0].x;
-    int y = points[1][0].y;
+void startVectorMove() {
 
-    int leftBound = 0;
-    int bottomBound = 0;
+    for(int i = 0; i < 22; i++) {//amount of column
+        for (int j = 0; j < 4; j++) { // amount of line
 
-    if (x >= leftBound && y >= bottomBound) {
+            char *adr = points[j][i].addressPoint;
+            char temp = *adr;
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                char *adrN = points[i][j].addressPoint;
-                int xN = points[i][j].x;
-                int xY = points[i][j].y;
-                char *temp = adrN;
-                //  = (points[i][j].addressPoint - 2) - (getAmountOfColumn() * 2);
-            
+            *adr  = ' ';
+            adr += (getAmountOfColumn() * 2) - 2;
+            *adr = temp;
 
-                adrN += (getAmountOfColumn() * 2) - 2;
-                
-                *adrN = *temp;
-                *temp = ' ';
-                
-
-                points[i][j].x = --xN;
-                points[i][j].y = --xY;
-                
-                points[i][j].addressPoint = adrN;
-            }
-
+            points[j][i].addressPoint = adr;
+            points[j][i].x -= 1;
+            points[j][i].y -= 1;
         }
     }
     
+
 }
 
 void printSaver(char *startAddress) {
@@ -57,10 +107,10 @@ void printSaver(char *startAddress) {
     while (*screen != '\0') {
 
         if (*screen == '\n') {
-            frameBuffer = startAddress + (160 * 1);
+            frameBuffer = startAddress + (160 * (i + 1));
             screen++;
-            j++;
-            i = 0;
+            i++;
+            j = 0;
             continue;
         }
         
@@ -72,7 +122,7 @@ void printSaver(char *startAddress) {
         frameBuffer += 2;
         screen++;
 
-        i++;
+        j++;
     }
 
     
@@ -80,7 +130,7 @@ void printSaver(char *startAddress) {
 
 void initPoints(int i, int j, char *address) {
 
-    int rowPosition = defineLine(address);
+    int rowPosition = getAmountOfLine() - defineLine(address);
     int columnPosition = defineColumn(address);
 
     points[i][j].addressPoint = address;

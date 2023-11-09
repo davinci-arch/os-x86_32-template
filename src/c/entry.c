@@ -59,10 +59,9 @@ void key_handler(struct keyboard_event event) {
         
         if (event.key == KEY_ENTER) {
             active = 1;
-            
-            
+
         } else if (event.key == KEY_TAB) {
-            printSaver(0xb8000 + (160 * 11) + 80);
+            printSaver(0xb8000 + (160 * 10) + 50);
 
         }
         
@@ -74,7 +73,7 @@ void key_handler(struct keyboard_event event) {
 void timer_tick_handler() {
     // do something when timer ticks
     if (active == 1) {
-        moveLeftBottom();
+        run();
     }
 }
 
