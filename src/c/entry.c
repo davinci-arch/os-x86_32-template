@@ -48,7 +48,7 @@ void key_handler(struct keyboard_event event) {
         //         executeCommand();
         //     } else {
         //         moveNextLineWithoutSign();
-        //     }
+        //     }-
         // } else if (event.key == KEY_TAB) {
         //     saveChanges(); //save changes in file
             
@@ -74,7 +74,7 @@ void key_handler(struct keyboard_event event) {
 void timer_tick_handler() {
     // do something when timer ticks
     if (active == 1) {
-        moveLeft();
+        move();
         
     }
 }
