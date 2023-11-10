@@ -12,5 +12,5 @@ struct ScreenSaverPoint {
 void run();
 void moveLeft();
 void move();
-
+void changeDirection(int x, int y);
 #endif SCREENSAVER_H

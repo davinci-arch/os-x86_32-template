@@ -13,6 +13,7 @@ int xN;
 int yN;
 int currentBound = -1;
 
+
 void run(int x, int y) {
     
     initPoint(x, y);
@@ -74,16 +75,15 @@ void move() {
     if (currentBound == -1) {
         xN = point.x;
         yN = point.y;
-        changeDirection(point.x += 1, point.y += 1);
+        changeDirection(--point.x, --point.y);
+
+
     }
 
     if (point.y == 0 || point.y + point.height == 25 ||
         point.x == 0 || point.x + point.width == 80) {
             
-        
-        
-        
-
+    
         if (point.y == 0) {
             currentBound = 0;
 
@@ -99,46 +99,40 @@ void move() {
         
     }
 
+    
 
     if (currentBound == 0 && xN < point.x) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x += 1, point.y += 1);
         
+        changeDirection(++point.x, ++point.y);
+
     } else if (currentBound == 0 && xN > point.x) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x -= 1, point.y += 1);
-        
+        changeDirection(--point.x, ++point.y);
+
     } else if (currentBound == 1 && xN < point.x) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x += 1, point.y -= 1);
-        
+        changeDirection(++point.x, --point.y);
+
     } else if (currentBound == 1 && xN > point.x) {
         xN = point.x;
         yN = point.y;
-        changeDirection(point.x -= 1, point.y -= 1);
+        changeDirection(--point.x, --point.y);
+
     } else if (currentBound == 2 && yN < point.y) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x += 1, point.y += 1);
+        changeDirection(++point.x, ++point.y);
+
     } else if (currentBound == 2 && yN > point.y) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x += 1, point.y -= 1);
+        changeDirection(++point.x, --point.y);
+
     } else if (currentBound == 3 && yN < point.y) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x -= 1, point.y += 1);
+        changeDirection(--point.x, ++point.y);
+
     } else if (currentBound == 3 && yN > point.y) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(point.x -= 1, point.y -= 1);
+        changeDirection(--point.x, --point.y);
+
     }
-        
     
     moveLeft();
+
+    
 }
 
 
@@ -146,6 +140,8 @@ void move() {
 * if you want to move left, turn [point.x--/++, point.y--/++], posX = ... + ((point.x + i) * 2), startAddress[...] = startAddress(posX+ (160 * j) + 2 -+ 160) if up -160, else +160
 * if you want to move right, turn [point.x--/++, point.y--/++], posX = ... + ((point.x + point.width - 1) * 2) - (i * 2), startAddress[...] = startAddress(posX+ (160 * j) - 2 -+ 160) if up -160, else +160;
 */
+char temp;
+
 void moveLeft() {
 
     int posX = 0;
@@ -156,40 +152,40 @@ void moveLeft() {
     // if (point.y >= 0 && point.x + point.width <= 80 &&
     //     point.y + point.height <= 25 && point.x + point.width <= 80) {
 
-        for (int i = 0; i < point.width; i++) {
+        for (int i = 0; i < point.height; i++) {
+            
+            if (xN > point.x && (yN - 1) < point.y) {
+                posX = (160 * (yN + point.height - 1 - i)) + xN * 2;
 
-            if (xN < point.x) {
-
-                posX = (160 * point.y) + ((point.x + point.width - 1) * 2) - (i * 2);
-
-            } else if (xN > point.x) {
-
-                posX = (160 * point.y) + ((point.x + i) * 2);
+            } else if (xN > point.x && (yN + 1) > point.y) {
+                posX = ((160 * yN) + xN * 2) + 160 * i;
 
             }
 
-            for (int j = 0; j < point.height; j++) {
+            for (int j = 0; j < point.width; j++) {
 
-                if (yN > point.y && xN < point.x) {
-                    startAddress[posX + (160 * j)] = startAddress[posX + (160 * j) - 2 + 160]; // + 160 move up, -160 move down
-                    startAddress[posX + (160 * j) - 2 + 160] = ' '; // + 160 move up, -160 move down
+                if (xN > point.x && (yN - 1) < point.y) {
+                    
+                    temp = startAddress[posX + j * 2]; 
 
-                } else if (yN < point.y && xN < point.x) {
-                    startAddress[posX + (160 * j)] = startAddress[posX + (160 * j) - 2 - 160]; // + 160 move up, -160 move down
-                    startAddress[posX + (160 * j) - 2 - 160] = ' '; // + 160 move up, -160 move down
+                    startAddress[posX + j * 2] = ' ';
 
-                } else if (yN > point.y && xN > point.x) {
-                    startAddress[posX + (160 * j)] = startAddress[posX + (160 * j) + 2 + 160]; // + 160 move up, -160 move down
-                    startAddress[posX + (160 * j) + 2 + 160] = ' '; // + 160 move up, -160 move down
+                    startAddress[posX + 160 - 2 + (2 * j)] = temp; 
+                    
+                } else if (xN > point.x && (yN + 1) > point.y) {
+                        
+                    temp = startAddress[posX + j * 2]; 
 
-                }   else if (yN < point.y && xN > point.x) {
-                    startAddress[posX + (160 * j)] = startAddress[posX + (160 * j) + 2 - 160]; // + 160 move up, -160 move down
-                    startAddress[posX + (160 * j) + 2 - 160] = ' '; // + 160 move up, -160 move down
+                    startAddress[posX + j * 2] = ' ';
+
+                    startAddress[posX - 160 - 2 + (2 * j)] = temp; 
                 }
-                
-
             }
+            
         }
+
+        
+        
     // }
 
 }

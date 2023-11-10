@@ -35,6 +35,8 @@ _Noreturn void halt_loop() {
 }
 char *frameBuffer = 0xb8000;
 int active = 0;
+int xN;
+int yN;
 void key_handler(struct keyboard_event event) {
     
    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
@@ -63,7 +65,8 @@ void key_handler(struct keyboard_event event) {
             
         } else if (event.key == KEY_TAB) {
             // printSaver(0xb8000 + (160 * 10) + 50);
-            active = 1;
+            // active = 1;
+            move();
         }
         
    }
