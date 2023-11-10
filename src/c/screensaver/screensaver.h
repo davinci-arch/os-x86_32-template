@@ -13,4 +13,5 @@ void run();
 void moveLeft();
 void move();
 void changeDirection(int x, int y);
+void moveNext();
 #endif SCREENSAVER_H

@@ -65,8 +65,8 @@ void key_handler(struct keyboard_event event) {
             
         } else if (event.key == KEY_TAB) {
             // printSaver(0xb8000 + (160 * 10) + 50);
-            // active = 1;
-            move();
+            active = 1;
+            // move();
         }
         
    }

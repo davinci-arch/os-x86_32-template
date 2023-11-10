@@ -1,17 +1,16 @@
 #include "screensaver.h"
 
-// xxx xxx\nx x x  \nx x xxx\nx x   x\nxxx xxx
-// x x    x     x   x x  \nx   x   x   x    x   x\nx   x    x x     x   x\nx x       x      x x  
+// #define screensaverLetters "xxx xxx\nx x x  \nx x xxx\nx x   x\nxxx xxx"
 #define screensaverLetters "x x    x     x   x x  \nx   x   x   x    x   x\nx   x    x x     x   x\nx x       x      x x  ";
+
 
 #define baseAddress 0xb8000;
 
 char *startAddress = (char *) baseAddress;
 
-int collision = 0;
+int collision = -1;
 int xN;
 int yN;
-int currentBound = -1;
 
 
 void run(int x, int y) {
@@ -60,7 +59,7 @@ void putPoint() {
             }
             
             startAddress[pos] = *letters;
-
+            startAddress[pos + 1] = 0x3;
             letters++;
             pos += 2;            
         }
@@ -70,129 +69,118 @@ void putPoint() {
 
 void move() {
 
-    
-    
-    if (currentBound == -1) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(--point.x, --point.y);
-
-
+    if (collision == -1) {
+        changeDirection(1, -1);
+        collision = 0;
     }
 
-    if (point.y == 0 || point.y + point.height == 25 ||
-        point.x == 0 || point.x + point.width == 80) {
-            
-    
-        if (point.y == 0) {
-            currentBound = 0;
-
-        } else if (point.y + point.height == 25) {
-            currentBound = 1;
-
-        } else if (point.x == 0) {
-            currentBound = 2;
-            
-        } else if (point.x + point.width == 80) {
-            currentBound = 3;
-        }
+    if (collision == 0 && point.x > 0 && (point.x + point.width) < 80 &&
+        point.y > 0 && (point.y + point.height) < 25 &&
+        (point.y != 0 && (point.x + point.width) != 80) &&
+        (point.y != 0 && point.x != 0) &&
+        (point.y != 25 && (point.x + point.width) != 80) &&
+        (point.y != 25 && point.x != 0)) {
         
-    }
+        moveNext();
 
-    
+    } else {
+        collision = 1;
 
-    if (currentBound == 0 && xN < point.x) {
+        if ((point.y == 0 && (point.x + point.width)) == 80 ||
+            (point.y == 0 && point.x == 0) ||
+            (point.y == 25 && (point.x + point.width) == 80) ||
+            (point.y == 25 && point.x == 0)) {
+
+            changeDirection(-xN, -yN);
+
+        } else if (point.x == 0 || (point.x + point.width) == 80) {
+
+            changeDirection(-xN, yN);
+
+        } else if (point.y == 0 || (point.y + point.height) == 25) {
+
+            changeDirection(xN, -yN);
+        } 
         
-        changeDirection(++point.x, ++point.y);
-
-    } else if (currentBound == 0 && xN > point.x) {
-        changeDirection(--point.x, ++point.y);
-
-    } else if (currentBound == 1 && xN < point.x) {
-        changeDirection(++point.x, --point.y);
-
-    } else if (currentBound == 1 && xN > point.x) {
-        xN = point.x;
-        yN = point.y;
-        changeDirection(--point.x, --point.y);
-
-    } else if (currentBound == 2 && yN < point.y) {
-        changeDirection(++point.x, ++point.y);
-
-    } else if (currentBound == 2 && yN > point.y) {
-        changeDirection(++point.x, --point.y);
-
-    } else if (currentBound == 3 && yN < point.y) {
-        changeDirection(--point.x, ++point.y);
-
-    } else if (currentBound == 3 && yN > point.y) {
-        changeDirection(--point.x, --point.y);
-
+        collision = 0;
+        moveNext();
     }
-    
-    moveLeft();
 
     
 }
 
+int position;
+int nextX;
 
-/**
-* if you want to move left, turn [point.x--/++, point.y--/++], posX = ... + ((point.x + i) * 2), startAddress[...] = startAddress(posX+ (160 * j) + 2 -+ 160) if up -160, else +160
-* if you want to move right, turn [point.x--/++, point.y--/++], posX = ... + ((point.x + point.width - 1) * 2) - (i * 2), startAddress[...] = startAddress(posX+ (160 * j) - 2 -+ 160) if up -160, else +160;
-*/
-char temp;
 
-void moveLeft() {
-
-    int posX = 0;
-
-    // point.x += 1; // - move left, + move rigth
-    // point.y += 1; // - move up, + move down
-
-    // if (point.y >= 0 && point.x + point.width <= 80 &&
-    //     point.y + point.height <= 25 && point.x + point.width <= 80) {
+void moveNext() {
 
         for (int i = 0; i < point.height; i++) {
-            
-            if (xN > point.x && (yN - 1) < point.y) {
-                posX = (160 * (yN + point.height - 1 - i)) + xN * 2;
 
-            } else if (xN > point.x && (yN + 1) > point.y) {
-                posX = ((160 * yN) + xN * 2) + 160 * i;
+            if (xN == -1 && yN == 1) {
+                position = ((160 * (point.y + point.height - 1 - i)) + point.x * 2);
 
+            } else if (xN == -1 && yN == -1) {
+
+                position = (160 * (point.y + i)) + point.x * 2;
+            } else if (xN == 1 && yN == 1) {
+
+                position = (160 * (point.y + point.height - 1 - i)) + (point.x + point.width - 1) * 2;
+
+            } else if (xN == 1 && yN == -1) {
+                position = (160 * (point.y + i)) + (point.x + point.width - 1) * 2;
             }
 
             for (int j = 0; j < point.width; j++) {
 
-                if (xN > point.x && (yN - 1) < point.y) {
-                    
-                    temp = startAddress[posX + j * 2]; 
+                if (xN == -1 && yN == 1) {
 
-                    startAddress[posX + j * 2] = ' ';
+                    nextX = (position + 2 * j) + 160 - 2;
+                    startAddress[nextX] = startAddress[position + 2 * j];
+                    startAddress[nextX+1] = startAddress[position + 2 * j + 1];
+                    startAddress[position + 2 * j] = ' ';
+                    startAddress[position + 2 * j + 1] = 0x7;
 
-                    startAddress[posX + 160 - 2 + (2 * j)] = temp; 
-                    
-                } else if (xN > point.x && (yN + 1) > point.y) {
-                        
-                    temp = startAddress[posX + j * 2]; 
+                } else if (xN == -1 && yN == -1) {
 
-                    startAddress[posX + j * 2] = ' ';
+                    nextX = (position + 2 * j) - 160 - 2;
+                    startAddress[nextX] = startAddress[position + 2 * j];
+                    startAddress[nextX+1] = startAddress[position + 2 * j+1];
 
-                    startAddress[posX - 160 - 2 + (2 * j)] = temp; 
+                    startAddress[position + 2 * j] = ' ';
+                    startAddress[position + 2 * j + 1] = 0x7;
+
+                } else if (xN == 1 && yN == 1) {
+
+                    nextX = (position - 2 * j) + 160 + 2;
+                    startAddress[nextX] = startAddress[position - 2 * j];
+                    startAddress[nextX+1] = startAddress[position - 2 * j+1];
+
+                    startAddress[position - 2 * j] = ' ';
+                    startAddress[position - 2 * j + 1] = 0x7;
+
+                } else if (xN == 1 && yN == -1) {
+
+                    nextX = (position - 2 * j) - 160 + 2;
+                    startAddress[nextX] = startAddress[position - 2 * j];
+                    startAddress[nextX+1] = startAddress[position - 2 * j+1];
+
+                    startAddress[position - 2 * j] = ' ';
+                    startAddress[position - 2 * j + 1] = 0x7;
+
                 }
             }
-            
         }
-
-        
-        
-    // }
+        point.x += xN;
+        point.y += yN;
 
 }
 
+
+
 void changeDirection(int x, int y) {
-    point.x = x;
-    point.y = y;
+    xN = x;
+    yN = y;
 }
 
 
