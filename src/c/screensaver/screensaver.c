@@ -1,12 +1,12 @@
 #include "screensaver.h"
+#include "../data/dataUtils.h"
 
 // #define screensaverLetters "xxx xxx\nx x x  \nx x xxx\nx x   x\nxxx xxx"
 #define screensaverLetters "x x    x     x   x x  \nx   x   x   x    x   x\nx   x    x x     x   x\nx x       x      x x  ";
 
 
-#define baseAddress 0xb8000;
 
-char *startAddress = (char *) baseAddress;
+char *startAddress;
 
 int collision = -1;
 int xN;
@@ -15,8 +15,11 @@ int yN;
 
 void run(int x, int y) {
     
+    startAddress = getBaseAddress();
+
     initPoint(x, y);
     putPoint();
+    
 }
 
 
@@ -74,22 +77,21 @@ void move() {
         collision = 0;
     }
 
-    if (collision == 0 && point.x > 0 && (point.x + point.width) < 80 &&
+    if (point.x > 0 && (point.x + point.width) < 80 &&
         point.y > 0 && (point.y + point.height) < 25 &&
-        (point.y != 0 && (point.x + point.width) != 80) &&
-        (point.y != 0 && point.x != 0) &&
-        (point.y != 25 && (point.x + point.width) != 80) &&
-        (point.y != 25 && point.x != 0)) {
+        (point.y > 0 && (point.x + point.width) < 80) &&
+        (point.y > 0 && point.x > 0) &&
+        (point.y < 25 && (point.x + point.width) < 80) &&
+        (point.y < 25 && point.x > 0)) {
         
         moveNext();
 
     } else {
-        collision = 1;
 
-        if ((point.y == 0 && (point.x + point.width)) == 80 ||
+        if ((point.y == 0 && (point.x + point.width) == 80) ||
             (point.y == 0 && point.x == 0) ||
-            (point.y == 25 && (point.x + point.width) == 80) ||
-            (point.y == 25 && point.x == 0)) {
+            ((point.y + point.height) == 25 && (point.x + point.width) == 80) ||
+            ((point.y + point.height) == 25 && point.x == 0)) {
 
             changeDirection(-xN, -yN);
 
@@ -102,7 +104,6 @@ void move() {
             changeDirection(xN, -yN);
         } 
         
-        collision = 0;
         moveNext();
     }
 

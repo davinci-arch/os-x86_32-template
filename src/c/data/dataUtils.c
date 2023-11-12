@@ -15,6 +15,7 @@ const int lengthSignLine = 4;
 char *currentAddress = (char *)START_ADDRESS;
 int cursorPosition = 2;
 int currentLine = 0;
+int screensaver = 0;
 
 void put_cursor(unsigned short pos) {
     out(0x3D4, 14);
@@ -28,6 +29,7 @@ void put_cursor(unsigned short pos) {
 void init_base_configuration() {
 
     changeStartBlock(0, START_ADDRESS);
+    changeStartBlock(10, 0xcb880); // allocate for main terminal for screensaver
     fillCommandStrucutre();
     clearTerminal(START_ADDRESS);
     printSignLine(START_ADDRESS);
@@ -152,9 +154,11 @@ void executeCommand() {
             break;
 
         case 3:
+
             deleteFile(adr);
             moveNextLine();
             break;
+
         case 4:
 
             editFile(adr);
@@ -165,11 +169,20 @@ void executeCommand() {
             setCurrentAddress(ls(adr));
             moveNextLine();
             break;
+            
         case 6:
+
             readFileContent(adr);
             moveNextLine();
             break;
+
+        case 7:
+
+            activateSleep();
+            break;
+
         default:
+
             setCurrentAddress(getMessage("Bad command!", 0x4));
             moveNextLine();
             break;
@@ -270,4 +283,14 @@ char *getBaseAddress() {
 
 int getCurrentLine() {
     return currentLine;
+}
+
+int isScreensaver() {
+
+    return screensaver;
+}
+
+void changeScreensaver(int val) {
+
+    screensaver = val;    
 }

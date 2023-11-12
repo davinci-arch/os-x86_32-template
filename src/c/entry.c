@@ -7,7 +7,6 @@
 #include "stringUtils/stringHandler.h"
 #include "file/fileHandler.h"
 #include "states/stateUtil.h"
-#include "screensaver/screensaver.h"
 
 void exception_handler(u32 interrupt, u32 error, char *message) {
     serial_log(LOG_ERROR, message);
@@ -33,41 +32,39 @@ void init_kernel() {
 _Noreturn void halt_loop() {
     while (1) { halt(); }
 }
-char *frameBuffer = 0xb8000;
-int active = 0;
-int xN;
-int yN;
+
+
 void key_handler(struct keyboard_event event) {
     
-   if (event.key_character && event.type == EVENT_KEY_PRESSED) {
-        
-        // if (event.key == KEY_BACKSPACE) {
-        //     removeCharacter();
-        
-        // } else if (event.key == KEY_ENTER)  {
+    if (event.key_character && event.type == EVENT_KEY_PRESSED) {
 
-        //     if (fileOn.isEdit == -1 || fileOn.isEdit == 0) {
-        //         executeCommand();
-        //     } else {
-        //         moveNextLineWithoutSign();
-        //     }-
-        // } else if (event.key == KEY_TAB) {
-        //     saveChanges(); //save changes in file
-            
-        // } else {
-        //     writeCharacter(event.key_character);
+       
+        if (isScreensaver() == 1) {
+            returnFromSleep();
+            moveNextLine();
 
-        // }
-        // printSaver(0xb8000 + (160 * 10) + 78);
-        
-        if (event.key == KEY_ENTER) {
-            run(28, 10);
-            
-        } else if (event.key == KEY_TAB) {
-            // printSaver(0xb8000 + (160 * 10) + 50);
-            active = 1;
-            // move();
+            if (getCurrentLine() <= getAmountOfLine()) {
+                overflowView();
+            }
         }
+
+        if (event.key == KEY_BACKSPACE) {
+            removeCharacter();
+        
+        } else if (event.key == KEY_ENTER)  {
+
+            if (fileOn.isEdit == -1 || fileOn.isEdit == 0) {
+                executeCommand();
+            } else {
+                moveNextLineWithoutSign();
+            }
+        } else if (event.key == KEY_TAB) {
+            saveChanges(); //save changes in file
+            
+        } else {
+            writeCharacter(event.key_character);
+        }
+        
         
    }
 }
@@ -76,9 +73,8 @@ void key_handler(struct keyboard_event event) {
 
 void timer_tick_handler() {
     // do something when timer ticks
-    if (active == 1) {
+    if (isScreensaver() == 1) {
         move();
-        
     }
 }
 

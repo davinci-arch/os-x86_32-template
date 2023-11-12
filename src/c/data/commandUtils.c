@@ -3,6 +3,8 @@
 #include "../file/fileHandler.h"
 #include "../states/stateUtil.h";
 #include "../stringUtils/stringHandler.h"
+#include "../screensaver/screensaver.h"
+
 #include "blockDatautils.h"
 
 void fillCommandStrucutre() {
@@ -14,6 +16,7 @@ void fillCommandStrucutre() {
     commands[4].command = "edit";
     commands[5].command = "ls";
     commands[6].command = "read";
+    commands[7].command = "sleep";
 
 
 }
@@ -52,7 +55,7 @@ char *helpCommand(char *currentAddress) {
     char *saveAdr = currentAddress;
     int amountOfColumn = getAmountOfColumn();
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 8; i++) {
 
         currentAddress += amountOfColumn * 2;
         
@@ -209,5 +212,38 @@ void deleteFile(char *address) {
     } else {
         setCurrentAddress(getMessage("File dosen't exist!", 0x4));
     }
+
+}
+
+void activateSleep() {
+    int startPositionX = 52;
+    int startPositionY = 6;
+    int positionMainWindowBlock = 0;
+
+    changeScreensaver(1); // run timer code
+
+    changeCurrentAddress(positionMainWindowBlock, getAddress());
+    changeCursor(positionMainWindowBlock, getCursorPosition());
+
+    changeCurrentAddress(10, getBaseAddress());
+
+    saveCurrentState(positionMainWindowBlock, 10); // swap displays
+    
+    setCurrentAddress(states[10].currentAddress);
+    put_cursor(states[10].cursorPosition);
+
+    run(startPositionX, startPositionY);
+    move();
+
+}
+
+void returnFromSleep() {
+    int positionMainWindowBlock = 0;
+
+    changeScreensaver(0);
+    clearTerminal(getBaseAddress());
+    saveCurrentState(10, positionMainWindowBlock);
+    setCurrentAddress(states[0].currentAddress);
+    put_cursor(states[0].cursorPosition);
 
 }
